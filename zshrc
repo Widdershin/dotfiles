@@ -10,6 +10,7 @@ antigen bundle pip
 antigen bundle lein
 antigen bundle command-not-found
 antigen bundle bundler
+antigen bundle tmux
 
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
@@ -27,3 +28,6 @@ antigen apply
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+
+[[ $TERM != "screen" ]] && exec tmux attach || exec tmux new
