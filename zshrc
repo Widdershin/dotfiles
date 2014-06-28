@@ -17,6 +17,8 @@ antigen bundle zsh-users/zsh-syntax-highlighting
 # Load the theme.
 antigen theme https://gist.github.com/Widdershin/a080ec7a6af0f943f40f agnoster
 
+antigen bundle https://gist.github.com/Widdershin/406b3a7cd8707741e1aa
+
 # Tell antigen that you're done.
 antigen apply
 
