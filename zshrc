@@ -28,6 +28,8 @@ antigen apply
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+export PGDATA="/var/lib/pgsql/data"
+export PATH="$PATH:/usr/lib/postgresql/9.1/bin"
 
 
 if [[ "$TERM" != "screen" ]] &&
@@ -53,3 +55,6 @@ else
         $MOTD
     fi
 fi
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
