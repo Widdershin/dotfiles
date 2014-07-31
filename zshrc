@@ -11,6 +11,8 @@ antigen bundle lein
 antigen bundle command-not-found
 antigen bundle bundler
 antigen bundle tmux
+antigen bundle pyenv
+antigen bundle virtualenv
 
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
@@ -31,6 +33,9 @@ export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 export PGDATA="/var/lib/pgsql/data"
 export PATH="$PATH:/usr/lib/postgresql/9.1/bin"
 
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/Projects
+source /usr/local/bin/virtualenvwrapper.sh
 
 if [[ "$TERM" != "screen" ]] &&
     ; then
