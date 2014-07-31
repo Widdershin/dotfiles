@@ -11,6 +11,8 @@ antigen bundle lein
 antigen bundle command-not-found
 antigen bundle bundler
 antigen bundle tmux
+antigen bundle pyenv
+antigen bundle virtualenv
 
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
