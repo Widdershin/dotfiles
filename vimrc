@@ -169,3 +169,5 @@ let g:ctrlp_max_depth = 5
 "matchit 
 runtime macros/matchit.vim
 
+"airline
+let g:airline_powerline_fonts = 1
