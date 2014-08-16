@@ -11,6 +11,8 @@ antigen bundle lein
 antigen bundle command-not-found
 antigen bundle bundler
 antigen bundle tmux
+antigen bundle pyenv
+antigen bundle virtualenv
 
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
@@ -26,8 +28,14 @@ antigen apply
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
 
+eval "$(rbenv init -)"
+export PGDATA="/var/lib/pgsql/data"
+export PATH="$PATH:/usr/lib/postgresql/9.1/bin"
+export VIRTUALENVWRAPPER_PYTHON=~/.pyenv/shims/python
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/Projects
+source /usr/local/bin/virtualenvwrapper.sh
 
 if [[ "$TERM" != "screen" ]] &&
     ; then
@@ -52,3 +60,6 @@ else
         $MOTD
     fi
 fi
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
