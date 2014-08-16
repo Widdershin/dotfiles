@@ -155,7 +155,7 @@ let NERDTreeIgnore = ['tmp', '.yardoc', 'pkg', 'node_modules']
 
 " Syntastic
 let g:syntastic_mode_map = { 'mode': 'passive' }
-let g:syntastic_ruby_exec = '~/.rvm/rubies/ruby-2.0.0-p0/bin/ruby'
+let g:syntastic_ruby_exec = '~/.rbenv/shims/ruby'
 
 " CtrlP
 nnoremap <silent> t :CtrlP<cr>
