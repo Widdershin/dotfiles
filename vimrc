@@ -13,6 +13,7 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'mhinz/vim-signify'
+Plugin 'tpope/vim-dispatch'
 Plugin 'kien/ctrlp.vim'
 Plugin 'rking/ag.vim'
 Plugin 'tomtom/tcomment_vim'
@@ -140,7 +141,7 @@ map <leader>a :call Send_to_Tmux("rake\n")<CR>
 map <leader>g :call Send_to_Tmux("grunt test\n")<CR>
 nmap ` :call Send_to_Tmux("npm test\n")<CR>
 
-let g:rspec_command = ':call Send_to_Tmux("bundle exec rspec {spec}\n")'
+let g:rspec_command = ':Dispatch bundle exec rspec {spec}'
 let g:mocha_js_command = ':call Send_to_Tmux("mocha --recursive {spec}\n")'
 let g:mocha_coffee_command = ':call Send_to_Tmux("mocha -b --recursive --compilers coffee:coffee-script/register {spec}\n")'
 
