@@ -47,6 +47,8 @@ Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'Lokaltog/vim-distinguished'
 Plugin 'flazz/vim-colorschemes'
 
+Plugin 'vim-auto-save'
+
 call vundle#end()            " required
 
 "set terminal to 256 colors
@@ -143,9 +145,7 @@ nmap <BS> :call RunCurrentSpecFile()<CR>
 nmap \ :call RunNearestSpec()<CR>
 nmap <CR> :call RunLastSpec()<CR>
 map <leader>s :call RunAllSpecs()<CR>
-map <leader>a :call Send_to_Tmux("rake\n")<CR>
-map <leader>g :call Send_to_Tmux("grunt test\n")<CR>
-nmap ` :call Send_to_Tmux("npm test\n")<CR>
+map <leader>a :Dispatch bundle exec rake<CR>
 
 let g:rspec_command = ':Dispatch bundle exec rspec {spec}'
 let g:mocha_js_command = ':call Send_to_Tmux("mocha --recursive {spec}\n")'
@@ -184,3 +184,6 @@ let g:airline#extensions#tabline#enabled = 1
 
 " Show just the filename
 let g:airline#extensions#tabline#fnamemod = ':t'
+
+"vim-auto-save
+let g:auto_save = 1  " enable AutoSave
