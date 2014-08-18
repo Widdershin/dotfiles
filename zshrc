@@ -30,6 +30,7 @@ antigen apply
 export PATH="$HOME/.rbenv/bin:$PATH"
 
 eval "$(rbenv init -)"
+export PATH="$HOME/.rbenv/shims:$PATH"
 export PGDATA="/var/lib/pgsql/data"
 export PATH="$PATH:/usr/lib/postgresql/9.1/bin"
 export VIRTUALENVWRAPPER_PYTHON=~/.pyenv/shims/python
