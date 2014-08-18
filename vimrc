@@ -113,6 +113,12 @@ nmap <leader>v  :rightbelow vsp<cr>
 nmap <leader>h   :rightbelow sp<cr>
 nmap <leader>o :only<cr>
 
+"disable nav keys
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
+
 "splits
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
