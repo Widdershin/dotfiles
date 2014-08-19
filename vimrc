@@ -36,6 +36,7 @@ Plugin 'tpope/vim-rake'
 Plugin 'kana/vim-textobj-user'
 Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'tpope/vim-rails'
+Plugin 'ecomba/vim-ruby-refactoring'
 
 Plugin 'tpope/vim-cucumber'
 
@@ -74,6 +75,7 @@ filetype plugin indent on    " required
 "
 
 let mapleader = ","
+nnoremap ; :
 
 set number
 set expandtab
@@ -85,7 +87,6 @@ set ttyscroll=10
 set encoding=utf-8
 set tabstop=2
 set wrap
-set number
 set nowritebackup
 set noswapfile
 set nobackup
@@ -106,6 +107,9 @@ autocmd BufWritePre *.slim :%s/\s\+$//e
 
 au BufNewFile * set noeol
 au BufRead,BufNewFile *.go set filetype=go
+
+" ;; to exit insert mode
+inoremap ;; <Esc>:w<CR>
 
 " No show command
 autocmd VimEnter * set nosc
@@ -168,7 +172,6 @@ let NERDTreeIgnore = ['tmp', '.yardoc', 'pkg', 'node_modules']
 
 " Syntastic
 let g:syntastic_mode_map = { 'mode': 'passive' }
-let g:syntastic_ruby_exec = '~/.rbenv/shims/ruby'
 
 " CtrlP
 nnoremap <silent> t :CtrlP<cr>
@@ -179,7 +182,7 @@ let g:ctrlp_by_filename = 1
 let g:ctrlp_max_files = 600
 let g:ctrlp_max_depth = 5
 
-"matchit 
+"matchit
 runtime macros/matchit.vim
 
 "airline
@@ -193,3 +196,7 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 
 "vim-auto-save
 let g:auto_save = 1  " enable AutoSave
+
+" Quickly edit/reload the vimrc file
+nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
