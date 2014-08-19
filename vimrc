@@ -12,6 +12,7 @@ Plugin 'tpope/vim-sensible'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-unimpaired'
+Plugin 'tpope/vim-endwise'
 Plugin 'mhinz/vim-signify'
 Plugin 'tpope/vim-dispatch'
 Plugin 'kien/ctrlp.vim'
@@ -91,6 +92,9 @@ set nobackup
 set hlsearch
 set ignorecase
 set smartcase
+set showcmd
+set splitright
+set splitbelow
 
 " Automatic formatting
 autocmd BufWritePre *.rb :%s/\s\+$//e
