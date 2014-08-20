@@ -52,6 +52,7 @@ Plugin 'Lokaltog/vim-distinguished'
 Plugin 'flazz/vim-colorschemes'
 
 Plugin 'vim-auto-save'
+Plugin 'ntpeters/vim-better-whitespace'
 
 call vundle#end()            " required
 
@@ -109,7 +110,7 @@ au BufNewFile * set noeol
 au BufRead,BufNewFile *.go set filetype=go
 
 " ;; to exit insert mode
-inoremap ;; <Esc>:w<CR>
+inoremap <leader><leader> <Esc>:w<CR>
 
 " No show command
 autocmd VimEnter * set nosc
@@ -133,9 +134,6 @@ noremap <Right> <NOP>
 
 " Tab between buffers
 noremap <tab> <c-w><c-w>
-
-" Switch between last two buffers
-nnoremap <leader><leader> <C-^>
 
 " Yank text to the OS X clipboard
 noremap <leader>y "*y
@@ -187,6 +185,9 @@ let g:airline#extensions#tabline#enabled = 1
 
 " Show just the filename
 let g:airline#extensions#tabline#fnamemod = ':t'
+
+"ruby-refactoring
+noremap <leader>el :RExtractLet<CR>
 
 "vim-auto-save
 let g:auto_save = 1  " enable AutoSave
