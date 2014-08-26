@@ -127,10 +127,13 @@ inoremap <leader>u <Esc>u
 " exit insert mode and run tests
 imap <leader><BS> <Esc>:w<CR><BS>
 
+" insert lines by cursor
+noremap <leader>o o<Esc>k
+noremap <leader>O O<Esc>j
+
 " Open new buffers
 nmap <leader>v  :rightbelow vsp<cr>
 nmap <leader>h   :rightbelow sp<cr>
-nmap <leader>o :only<cr>
 
 "disable nav keys
 noremap <Up> <NOP>
