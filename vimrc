@@ -50,6 +50,7 @@ Plugin 'christoomey/vim-tmux-navigator'
 
 Plugin 'Lokaltog/vim-distinguished'
 Plugin 'flazz/vim-colorschemes'
+Plugin 'qualiabyte/vim-colorstepper'
 
 Plugin 'vim-auto-save'
 Plugin 'ntpeters/vim-better-whitespace'
@@ -76,7 +77,6 @@ filetype plugin indent on    " required
 "
 
 let mapleader = ","
-nnoremap ; :
 
 set number
 set expandtab
@@ -120,6 +120,12 @@ nmap <leader>fef ggVG=
 
 " reload current file
 nmap <leader>r :e!<CR>
+
+" exit insert mode and undo
+inoremap <leader>u <Esc>u
+
+" exit insert mode and run tests
+imap <leader><BS> <Esc>:w<CR><BS>
 
 " Open new buffers
 nmap <leader>v  :rightbelow vsp<cr>
@@ -195,3 +201,9 @@ let g:auto_save = 1  " enable AutoSave
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
+augroup BgHighlight
+    autocmd!
+    autocmd WinEnter * set colorcolumn=80
+    autocmd WinLeave * set colorcolumn=0
+augroup END
