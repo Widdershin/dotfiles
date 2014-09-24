@@ -37,6 +37,7 @@ Plugin 'kana/vim-textobj-user'
 Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'tpope/vim-rails'
 Plugin 'ecomba/vim-ruby-refactoring'
+Plugin 'jgdavey/vim-blockle'
 
 Plugin 'tpope/vim-cucumber'
 
@@ -54,6 +55,7 @@ Plugin 'qualiabyte/vim-colorstepper'
 
 Plugin 'vim-auto-save'
 Plugin 'ntpeters/vim-better-whitespace'
+Plugin 'sjl/vitality.vim'
 
 call vundle#end()            " required
 
@@ -112,14 +114,17 @@ au BufRead,BufNewFile *.go set filetype=go
 " ;; to exit insert mode
 inoremap <leader><leader> <Esc>:w<CR>
 
-" No show command
-autocmd VimEnter * set nosc
-
 " format the entire file
 nmap <leader>fef ggVG=
 
 " reload current file
 nmap <leader>r :e!<CR>
+
+" reload all open files
+nmap <leader>R :tabdo bufdo e!<CR>
+
+" reopen tests
+nmap <leader>rt <c-l>:bw<CR>:AV<CR>
 
 " exit insert mode and undo
 inoremap <leader>u <Esc>u
@@ -155,10 +160,13 @@ noremap <leader>p :set paste<CR>:put  *<CR>:set nopaste<CR>
 nmap <BS> :call RunCurrentSpecFile()<CR>
 nmap \ :call RunNearestSpec()<CR>
 nmap <CR> :call RunLastSpec()<CR>
-map <leader>s :call RunAllSpecs()<CR>
+map <leader>s :AV<CR>
 map <leader>a :Dispatch bundle exec rake<CR>
+map <leader>A :call Send_to_Tmux("rspec\n")<CR>
+map <leader>re :call Send_to_Tmux("r\n")<CR>
+map <leader>cu :call Send_to_Tmux("cucumber %\n")<CR>
 
-let g:rspec_command = ':Dispatch bundle exec rspec {spec}'
+let g:rspec_command = ':call Send_to_Tmux("rspec {spec}\n")'
 let g:mocha_js_command = ':call Send_to_Tmux("mocha --recursive {spec}\n")'
 let g:mocha_coffee_command = ':call Send_to_Tmux("mocha -b --recursive --compilers coffee:coffee-script/register {spec}\n")'
 

@@ -39,6 +39,13 @@ export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/Projects
 source /usr/local/bin/virtualenvwrapper.sh
 
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+
+# Powerline cfg
+export POWERLINE_ROOT=$HOME/Library/Python/2.7/lib/python/site-packages/powerline
+export PATH="$HOME/Library/Python/2.7/bin:$PATH"
+
 if [[ "$TERM" != "screen" ]] &&
     ; then
     # Attempt to discover a detached session and attach
@@ -62,6 +69,3 @@ else
         $MOTD
     fi
 fi
-
-### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
