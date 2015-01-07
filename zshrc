@@ -1,3 +1,5 @@
+skip_global_compinit=1
+
 source ~/antigen/antigen.zsh
 
 # Load the oh-my-zsh's library.
@@ -5,13 +7,8 @@ antigen use oh-my-zsh
 
 # Bundles from the default repo (robbyrussell's oh-my-zsh).
 antigen bundle git
-antigen bundle heroku
-antigen bundle pip
-antigen bundle lein
 antigen bundle command-not-found
-antigen bundle bundler
 antigen bundle tmux
-antigen bundle pyenv
 antigen bundle virtualenv
 
 # Syntax highlighting bundle.
@@ -22,16 +19,18 @@ antigen theme https://gist.github.com/Widdershin/a080ec7a6af0f943f40f agnoster
 
 antigen bundle https://gist.github.com/Widdershin/406b3a7cd8707741e1aa
 
+
 # Tell antigen that you're done.
 antigen apply
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
+export PATH="$HOME/.rbenv/shims:$PATH"
 export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.rbenv/bin:$PATH"
 
 eval "$(rbenv init -)"
-export PATH="$HOME/.rbenv/shims:$PATH"
+eval "$(pyenv init -)"
 export PGDATA="/var/lib/pgsql/data"
 export PATH="$PATH:/usr/lib/postgresql/9.1/bin"
 export VIRTUALENVWRAPPER_PYTHON=~/.pyenv/shims/python
@@ -44,9 +43,28 @@ export PATH="/usr/local/heroku/bin:$PATH"
 
 # Powerline cfg
 export POWERLINE_ROOT=$HOME/Library/Python/2.7/lib/python/site-packages/powerline
-export PATH="$HOME/Library/Python/2.7/bin:$PATH"
 
-if [[ "$TERM" != "screen" ]] &&
+alias nz="PS_MARKET=nz"
+alias au="PS_MARKET=au"
+alias c="rails c"
+alias s="rails s"
+alias e="vim"
+alias be="bundle exec"
+alias rails='be rails'
+alias spec='spring rspec'
+alias cuke='spring cucumber'
+alias nzb="nz be"
+alias aub="au be"
+
+alias ev="vim ~/.zshrc"
+alias sv="source ~/.zshrc"
+
+alias psactive='[ `host secure.powershop.co.nz|cut -d" " -f4` "==" `host akl.secure.powershop.co.nz|cut -d" " -f4` ] && echo akl || [ `host secure.powershop.co.nz|cut -d" " -f4` "==" `host wlg.secure.powershop.co.nz|cut -d" " -f4` ] && echo wlg'
+alias psinactive='[ `host secure.powershop.co.nz|cut -d" " -f4` "==" `host akl.secure.powershop.co.nz|cut -d" " -f4` ] && echo wlg || [ `host secure.powershop.co.nz|cut -d" " -f4` "==" `host wlg.secure.powershop.co.nz|cut -d" " -f4` ] && echo akl'
+
+export EDITOR='vim'
+
+if [[ "$TERM" != "screen-256color" ]] &&
     ; then
     # Attempt to discover a detached session and attach
     # it, else create a new session

@@ -6,29 +6,30 @@ set rtp+=~/.vim/bundle/Vundle.vim
 
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
-
 Plugin 'bling/vim-airline'
 Plugin 'tpope/vim-sensible'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'tpope/vim-endwise'
-Plugin 'mhinz/vim-signify'
 Plugin 'tpope/vim-dispatch'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-obsession'
 Plugin 'kien/ctrlp.vim'
 Plugin 'rking/ag.vim'
-Plugin 'tomtom/tcomment_vim'
-Plugin 'Valloric/YouCompleteMe'
 Plugin 'vim-scripts/matchit.zip'
 Plugin 'vim-scripts/ruby-matchit'
-
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'scrooloose/syntastic'
 Plugin 'scrooloose/nerdtree'
 
+Plugin 'SirVer/ultisnips'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'ervandew/supertab'
 Plugin 'honza/vim-snippets'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
-Plugin 'garbas/vim-snipmate'
 
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-bundler'
@@ -38,6 +39,7 @@ Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'tpope/vim-rails'
 Plugin 'ecomba/vim-ruby-refactoring'
 Plugin 'jgdavey/vim-blockle'
+Plugin 'lucapette/vim-ruby-doc'
 
 Plugin 'tpope/vim-cucumber'
 
@@ -49,14 +51,14 @@ Plugin 'thoughtbot/vim-rspec'
 Plugin 'jgdavey/tslime.vim'
 Plugin 'christoomey/vim-tmux-navigator'
 
-Plugin 'Lokaltog/vim-distinguished'
 Plugin 'flazz/vim-colorschemes'
-Plugin 'qualiabyte/vim-colorstepper'
 
 Plugin 'vim-auto-save'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'sjl/vitality.vim'
-
+Plugin 'terryma/vim-expand-region'
+Plugin 'AndrewRadev/splitjoin.vim'
+Plugin 'djoshea/vim-autoread'
 call vundle#end()            " required
 
 "set terminal to 256 colors
@@ -78,19 +80,19 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 "
 
-let mapleader = ","
-
 set number
 set expandtab
 set modelines=0
 set shiftwidth=2
 set clipboard=unnamed
-set synmaxcol=128
+set synmaxcol=512
 set ttyscroll=10
 set encoding=utf-8
 set tabstop=2
+set mouse=a
 set wrap
 set nowritebackup
+set history=1000
 set noswapfile
 set nobackup
 set hlsearch
@@ -99,23 +101,37 @@ set smartcase
 set showcmd
 set splitright
 set splitbelow
+set autoread
+set relativenumber
+set number
+set nowrap
 
-" Automatic formatting
-autocmd BufWritePre *.rb :%s/\s\+$//e
-autocmd BufWritePre *.go :%s/\s\+$//e
-autocmd BufWritePre *.haml :%s/\s\+$//e
-autocmd BufWritePre *.html :%s/\s\+$//e
-autocmd BufWritePre *.scss :%s/\s\+$//e
-autocmd BufWritePre *.slim :%s/\s\+$//e
+" Extend our undoable steps and preserve over restart (if available)
+if has('persistent_undo')
+  set undodir=$TMPDIR,~/tmp,~/.vim/tmp,/tmp,/var/tmp
+  set undofile
+  set undoreload=10000
+end
+set undolevels=10000
 
 au BufNewFile * set noeol
-au BufRead,BufNewFile *.go set filetype=go
+au FocusLost * silent! wa
+
+nmap <space> <leader>
+nmap <space><space> <leader><leader>
+" xmap includes Visual mode but not Select mode (which we don't often use, but
+" if we did we'd expect hitting space to replace the selected text with a
+" space char).
+xmap <space> <leader>
 
 " ;; to exit insert mode
-inoremap <leader><leader> <Esc>:w<CR>
+inoremap kj <Esc>:w<CR>
 
 " format the entire file
 nmap <leader>fef ggVG=
+
+" close buffer
+nmap <leader>x :bd<CR>
 
 " reload current file
 nmap <leader>r :e!<CR>
@@ -126,11 +142,8 @@ nmap <leader>R :tabdo bufdo e!<CR>
 " reopen tests
 nmap <leader>rt <c-l>:bw<CR>:AV<CR>
 
-" exit insert mode and undo
-inoremap <leader>u <Esc>u
-
-" exit insert mode and run tests
-imap <leader><BS> <Esc>:w<CR><BS>
+nmap t :CtrlP :pwd<CR>
+nmap Tc :CtrlP $(:pwd)/controllers<CR>
 
 " insert lines by cursor
 noremap <leader>o o<Esc>k
@@ -145,9 +158,6 @@ noremap <Up> <NOP>
 noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
-
-" Tab between buffers
-noremap <tab> <c-w><c-w>
 
 " Yank text to the OS X clipboard
 noremap <leader>y "*y
@@ -166,7 +176,7 @@ map <leader>A :call Send_to_Tmux("rspec\n")<CR>
 map <leader>re :call Send_to_Tmux("r\n")<CR>
 map <leader>cu :call Send_to_Tmux("cucumber %\n")<CR>
 
-let g:rspec_command = ':call Send_to_Tmux("rspec {spec}\n")'
+let g:rspec_command = ':call Send_to_Tmux("spec {spec}\n")'
 let g:mocha_js_command = ':call Send_to_Tmux("mocha --recursive {spec}\n")'
 let g:mocha_coffee_command = ':call Send_to_Tmux("mocha -b --recursive --compilers coffee:coffee-script/register {spec}\n")'
 
@@ -180,16 +190,17 @@ let NERDTreeHighlightCursorline=1
 let NERDTreeIgnore = ['tmp', '.yardoc', 'pkg', 'node_modules']
 
 " Syntastic
-let g:syntastic_mode_map = { 'mode': 'passive' }
+let g:syntastic_mode_map = { 'mode': 'active' }
 
 " CtrlP
-nnoremap <silent> t :CtrlP<cr>
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files']
 set wildignore+=node_modules
-let g:ctrlp_working_path_mode = 2
-let g:ctrlp_by_filename = 1
-let g:ctrlp_max_files = 600
-let g:ctrlp_max_depth = 5
+let g:ctrlp_cmd = 'CtrlPMixed'
+let g:ctrlp_max_files = 15000
+let g:ctrlp_max_depth = 40
 
 "matchit
 runtime macros/matchit.vim
@@ -209,9 +220,24 @@ noremap <leader>el :RExtractLet<CR>
 "vim-auto-save
 let g:auto_save = 1  " enable AutoSave
 
+" make YCM compatible with UltiSnips (using supertab)
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:ycm_path_to_python_interpreter = '/usr/local/bin/python'
+
+let g:SuperTabDefaultCompletionType = '<C-n>'
+
+" better key bindings for UltiSnipsExpandTrigger
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
+nmap <leader>t :noautocmd vimgrep TODO **/*.rb<CR>:cw<CR>
+autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
 
 augroup BgHighlight
     autocmd!
