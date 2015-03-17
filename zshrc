@@ -1,5 +1,3 @@
-skip_global_compinit=1
-
 source ~/antigen/antigen.zsh
 
 # Load the oh-my-zsh's library.
@@ -30,8 +28,6 @@ export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.rbenv/bin:$PATH"
 
 eval "$(rbenv init -)"
-eval "$(pyenv init -)"
-export PGDATA="/var/lib/pgsql/data"
 export PATH="$PATH:/usr/lib/postgresql/9.1/bin"
 export VIRTUALENVWRAPPER_PYTHON=~/.pyenv/shims/python
 export WORKON_HOME=$HOME/.virtualenvs
@@ -51,8 +47,9 @@ alias s="rails s"
 alias e="vim"
 alias be="bundle exec"
 alias rails='be rails'
-alias spec='spring rspec'
-alias cuke='spring cucumber'
+alias rake='be rake'
+alias spec='be spring rspec'
+alias cuke='be spring cucumber'
 alias nzb="nz be"
 alias aub="au be"
 
@@ -63,6 +60,7 @@ alias psactive='[ `host secure.powershop.co.nz|cut -d" " -f4` "==" `host akl.sec
 alias psinactive='[ `host secure.powershop.co.nz|cut -d" " -f4` "==" `host akl.secure.powershop.co.nz|cut -d" " -f4` ] && echo wlg || [ `host secure.powershop.co.nz|cut -d" " -f4` "==" `host wlg.secure.powershop.co.nz|cut -d" " -f4` ] && echo akl'
 
 export EDITOR='vim'
+stty -ixon
 
 if [[ "$TERM" != "screen-256color" ]] &&
     ; then
