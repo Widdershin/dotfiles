@@ -1,6 +1,6 @@
 " -- Plugins --
 
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.nvim/plugged')
 
 " Autosave
 Plug 'vim-auto-save'
@@ -10,14 +10,19 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'AndrewRadev/splitjoin.vim'
+Plug 'ervandew/supertab'
+Plug 'Shougo/vimproc.vim'
 
 " UI
 Plug 'bling/vim-airline'
+Plug 'Shougo/unite.vim'
 Plug 'wincent/command-t'
 Plug 'scrooloose/syntastic'
 Plug 'scrooloose/nerdtree'
 Plug 'majutsushi/tagbar'
 Plug 'ap/vim-css-color'
+Plug 'AnsiEsc.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 
 " Theme
 Plug 'tomasr/molokai'
@@ -31,12 +36,13 @@ Plug 'tpope/vim-rails'
 Plug 'vim-ruby/vim-ruby'
 Plug 'thoughtbot/vim-rspec'
 Plug 'ecomba/vim-ruby-refactoring'
+Plug 'osyo-manga/vim-monster'
 
 " Tmux
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'jgdavey/tslime.vim'
+Plug 'tmux-plugins/vim-tmux-focus-events'
 
-" Sonic Pi
 Plug 'dermusikman/sonicpi.vim'
 
 call plug#end()
@@ -46,6 +52,9 @@ colorscheme molokai
 
 
 " -- Options --
+
+" Redraw less for vroom vroom
+set lazyredraw
 
 " Encoding
 set encoding=utf-8
@@ -62,10 +71,16 @@ set smartcase
 " 2 space tabs
 set expandtab
 set tabstop=2
+set shiftwidth=2
+
+" Splits
+set splitright
+set splitbelow
 
 " Mouse
 set mouse=a
 set ttyfast
+set t_Co=256
 
 " History
 set nowritebackup
@@ -97,7 +112,7 @@ set undolevels=10000
 let g:rspec_command = ':call Send_to_Tmux("spec {spec}\n")'
 
 " Syntastic
-let g:syntastic_mode_map = { 'mode': 'active' }
+let g:syntastic_mode_map = { 'mode': 'passive' }
 
 "airline
 let g:airline_powerline_fonts = 1
@@ -107,9 +122,11 @@ let g:airline#extensions#tabline#enabled = 1
 
 " Show just the filename
 let g:airline#extensions#tabline#fnamemod = ':t'
-"
+
 "vim-auto-save
-let g:auto_save = 0  " enable AutoSave
+let g:auto_save = 1  " enable AutoSave
+let g:auto_save_in_insert_mode = 0
+let g:auto_save_silent = 0  " do not display the auto-save notification
 
 "Command t
 let g:CommandTMaxHeight = 25
@@ -136,21 +153,23 @@ nmap <leader>fef ggVG=
 nmap <leader>x :q<CR>
 
 " Command T
-nmap <c-p> :CommandT<CR>
+noremap <c-p> :FZF<CR>
+
+
 
 " Tagbar
 nmap <leader>t :TagbarToggle<CR>
-autocmd VimEnter * nested :TagbarOpen
 
 " insert lines without entering insert mode
 noremap <leader>o o<Esc>k
 noremap <leader>O O<Esc>j
 
 " Run specs
-nmap <BS> :call RunCurrentSpecFile()<CR>
+noremap <BS> :call RunCurrentSpecFile()<CR>
+noremap \ :call RunNearestSpec()<CR>
 
 " Explore
-nmap <leader>n :NERDTreeToggle<CR>
+noremap <leader>n :NERDTreeToggle<CR>
 
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
@@ -166,3 +185,10 @@ augroup BgHighlight
     autocmd WinLeave * set colorcolumn=0
 augroup END
 
+" Save on focus lost
+au FocusLost * silent! wa
+
+
+
+" Set async completion.
+let g:monster#completion#rcodetools#backend = "async_rct_complete"
