@@ -15,8 +15,6 @@ Plug 'Shougo/vimproc.vim'
 
 " UI
 Plug 'bling/vim-airline'
-Plug 'Shougo/unite.vim'
-Plug 'wincent/command-t'
 Plug 'scrooloose/syntastic'
 Plug 'scrooloose/nerdtree'
 Plug 'majutsushi/tagbar'
