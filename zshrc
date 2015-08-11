@@ -10,6 +10,7 @@ antigen bundle tmux
 #antigen bundle virtualenv
 antigen bundle chrissicool/zsh-256color
 antigen bundle zsh-users/zsh-completions src
+antigen bundle tarruda/zsh-autosuggestions 
 
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
@@ -35,7 +36,6 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 
 eval "$(rbenv init -)"
 export PATH="$PATH:/usr/lib/postgresql/9.1/bin"
-#export VIRTUALENVWRAPPER_PYTHON=~/.pyenv/shims/python
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/Projects
 #source /usr/local/bin/virtualenvwrapper.sh
@@ -45,7 +45,7 @@ export PATH="/usr/local/heroku/bin:$PATH"
 
 # Powerline cfg
 export POWERLINE_ROOT=$HOME/Library/Python/2.7/lib/python/site-packages/powerline
-export PYTHONPATH=/lib/python2.7/site-packages/
+export PYTHONPATH=/usr/local/lib/python2.7/site-packages/
 
 
 alias nz="export PS_MARKET=nz && sed -i bak 's/au/nz/' .powenv && rm .powenvbak && powder restart"
@@ -76,6 +76,8 @@ alias aupsactive='([ `host secure.powershop.com.au|cut -d" " -f4` "==" `host akl
 alias aupsinactive='([ `host secure.powershop.com.au|cut -d" " -f4` "==" `host akl.secure.powershop.com.au|cut -d" " -f4` ] && echo wlg) || ([ `host secure.powershop.com.au|cut -d" " -f4` "==" `host wlg.secure.powershop.com.au|cut -d" " -f4` ] && echo akl)'
 
 alias beetil='open "https://desk.gotoassist.com/goto?q=$(git symbolic-ref --short HEAD | cut -c 2-)"'
+alias review='open "https://git.powershop.co.nz/powerapps/powershop/compare/master...$(git symbolic-ref --short HEAD)"'
+alias whoisthatsnail="say 'Meow' && echo His name is Gary and he\'s very sensitive."
 
 sshs() {
   if [[ $1 == *"prod"* ]]
@@ -93,6 +95,10 @@ alias ssh=sshs
 
 export EDITOR='vim'
 stty -ixon
+
+if [[ "$PWD" == "/Users/nickj/Projects/powershop" ]]; then
+  source .powenv
+fi
 
 if [[ "$TERM" != "screen-256color" ]] &&
     ; then
@@ -118,3 +124,4 @@ else
     fi
 fi
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export PATH="/usr/local/sbin:$PATH"

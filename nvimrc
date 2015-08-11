@@ -8,6 +8,7 @@ Plug 'vim-auto-save'
 " Editing
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-repeat'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ervandew/supertab'
@@ -21,8 +22,11 @@ Plug 'majutsushi/tagbar'
 Plug 'ap/vim-css-color'
 Plug 'AnsiEsc.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
+Plug 'ntpeters/vim-better-whitespace'
 
 " Theme
+Plug 'nanotech/jellybeans.vim'
+Plug 'Yggdroot/indentLine'
 Plug 'tomasr/molokai'
 
 " Git
@@ -35,21 +39,30 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'thoughtbot/vim-rspec'
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'osyo-manga/vim-monster'
+Plug 'danchoi/ri.vim'
 
 " Tmux
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'jgdavey/tslime.vim'
 Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'sjl/vitality.vim'
 
 Plug 'dermusikman/sonicpi.vim'
+
+" Crystal
+Plug 'rhysd/vim-crystal'
+
 
 call plug#end()
 
 " Set the theme
-colorscheme molokai
+colorscheme jellybeans
 
 
 " -- Options --
+
+" No wrapping please
+set nowrap
 
 " Redraw less for vroom vroom
 set lazyredraw
@@ -95,6 +108,9 @@ set synmaxcol=512
 " Watch files
 set autoread
 
+" Save on changing buffers
+set autowrite
+
 " Display command
 set showcmd
 
@@ -111,6 +127,7 @@ let g:rspec_command = ':call Send_to_Tmux("spec {spec}\n")'
 
 " Syntastic
 let g:syntastic_mode_map = { 'mode': 'passive' }
+let g:syntastic_javascript_checkers = ['standard']
 
 "airline
 let g:airline_powerline_fonts = 1
@@ -122,13 +139,16 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 
 "vim-auto-save
-let g:auto_save = 1  " enable AutoSave
+let g:auto_save = 0  " enable AutoSave
 let g:auto_save_in_insert_mode = 0
-let g:auto_save_silent = 0  " do not display the auto-save notification
+let g:auto_save_silent = 1  " do not display the auto-save notification
 
 "Command t
 let g:CommandTMaxHeight = 25
 let g:CommandTFileScanner = 'watchman'
+
+"Navigator
+let g:tmux_navigator_save_on_switch = 1
 
 " Set leader to space
 nmap <space> <leader>
@@ -150,9 +170,9 @@ nmap <leader>fef ggVG=
 " close buffer
 nmap <leader>x :q<CR>
 
-" Command T
+" FZF
 noremap <c-p> :FZF<CR>
-
+let g:fzf_source = 'find . -type f | grep -v "node_modules/"'
 
 
 " Tagbar
@@ -176,7 +196,7 @@ nmap <silent> <leader>sv :so $MYVIMRC<CR>
 " Restore the enter key in the quick fix panel
 autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
 
-" Add a linemarker at 80
+" Add a ruler at 80 characters
 augroup BgHighlight
     autocmd!
     autocmd WinEnter * set colorcolumn=80
@@ -185,6 +205,9 @@ augroup END
 
 " Save on focus lost
 au FocusLost * silent! wa
+
+nmap <leader><leader> :call Send_to_Tmux("tst\n")<cr>
+nmap <leader>w :w <cr>:silent SyntasticCheck<cr>
 
 
 
