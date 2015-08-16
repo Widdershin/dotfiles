@@ -14,9 +14,11 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ervandew/supertab'
 Plug 'Shougo/vimproc.vim'
 
+" Linting
+Plug 'benekastah/neomake'
+
 " UI
 Plug 'bling/vim-airline'
-Plug 'scrooloose/syntastic'
 Plug 'scrooloose/nerdtree'
 Plug 'majutsushi/tagbar'
 Plug 'ap/vim-css-color'
@@ -139,7 +141,7 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 
 "vim-auto-save
-let g:auto_save = 0  " enable AutoSave
+let g:auto_save = 1  " enable AutoSave
 let g:auto_save_in_insert_mode = 0
 let g:auto_save_silent = 1  " do not display the auto-save notification
 
@@ -150,6 +152,9 @@ let g:CommandTFileScanner = 'watchman'
 "Navigator
 let g:tmux_navigator_save_on_switch = 1
 
+" Indent lines
+let g:indentLine_color_term = 000
+
 " Set leader to space
 nmap <space> <leader>
 nmap <space><space> <leader><leader>
@@ -158,6 +163,9 @@ nmap <space><space> <leader><leader>
 " space char).
 xmap <space> <leader>
 
+" Neomake
+autocmd! BufRead,BufWritePost * Neomake
+let g:neomake_javascript_enabled_makers = ['eslint']
 
 " -- Shortcuts --
 
@@ -207,7 +215,7 @@ augroup END
 au FocusLost * silent! wa
 
 nmap <leader><leader> :call Send_to_Tmux("tst\n")<cr>
-nmap <leader>w :w <cr>:silent SyntasticCheck<cr>
+nmap <leader>w :w <cr>
 
 
 
