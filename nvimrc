@@ -42,6 +42,7 @@ Plug 'thoughtbot/vim-rspec'
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'osyo-manga/vim-monster'
 Plug 'danchoi/ri.vim'
+Plug 'jgdavey/vim-blockle'
 
 " Tmux
 Plug 'christoomey/vim-tmux-navigator'
@@ -166,6 +167,7 @@ xmap <space> <leader>
 " Neomake
 autocmd! BufRead,BufWritePost * Neomake
 let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_ruby_enabled_makers = ['rubocop']
 
 " -- Shortcuts --
 
