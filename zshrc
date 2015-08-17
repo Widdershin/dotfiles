@@ -64,6 +64,7 @@ alias nzb="nz be"
 alias aub="au be"
 alias agst="watch -n 1 --color git status -sb"
 alias g-="gco -"
+alias gdc="git diff --cached"
 alias migrate="PS_MARKET=nz rake db:migrate && PS_MARKET=au rake db:migrate"
 
 alias ev="vim ~/.zshrc"
