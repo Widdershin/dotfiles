@@ -73,6 +73,9 @@ alias g-="gco -"
 alias gdc="git diff --cached"
 alias migrate="PS_MARKET=nz rake db:migrate && PS_MARKET=au rake db:migrate"
 
+alias mkrb="~/utils/mkrb/mkrb.py"
+alias mvrb="~/utils/mvrb/mvrb.py"
+
 alias ev="vim ~/.zshrc"
 alias sv="source ~/.zshrc"
 
