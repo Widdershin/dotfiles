@@ -7,6 +7,7 @@ antigen use oh-my-zsh
 antigen bundle git
 antigen bundle command-not-found
 antigen bundle tmux
+antigen bundle extract
 #antigen bundle virtualenv
 antigen bundle chrissicool/zsh-256color
 antigen bundle zsh-users/zsh-completions src
