@@ -25,6 +25,7 @@ Plug 'ap/vim-css-color'
 Plug 'AnsiEsc.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'roman/golden-ratio'
 
 " Theme
 Plug 'nanotech/jellybeans.vim'
