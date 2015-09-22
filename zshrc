@@ -25,6 +25,8 @@ antigen bundle https://gist.github.com/Widdershin/406b3a7cd8707741e1aa
 # Tell antigen that you're done.
 antigen apply
 
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
 
 # command correction
 setopt correct
