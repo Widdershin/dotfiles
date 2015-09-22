@@ -46,6 +46,9 @@ export PROJECT_HOME=$HOME/Projects
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
+export GOPATH=$HOME
+export PATH="$PATH:$GOPATH/bin"
+
 # Powerline cfg
 export POWERLINE_ROOT=$HOME/Library/Python/2.7/lib/python/site-packages/powerline
 export PYTHONPATH=/usr/local/lib/python2.7/site-packages/
