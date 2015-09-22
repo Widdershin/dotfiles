@@ -220,7 +220,14 @@ au FocusLost * silent! wa
 nmap <leader><leader> :call Send_to_Tmux("tst\n")<cr>
 nmap <leader>w :w <cr>
 
+" Autocomplete tags
+iabbrev </<leader> </<C-X><C-O>
 
+" Add a semicolon to end of line when pressing ;
+nmap ; A;kj
+
+" Add a comma to end of line when pressing ,
+nmap , A,kj
 
 " Set async completion.
 let g:monster#completion#rcodetools#backend = "async_rct_complete"
