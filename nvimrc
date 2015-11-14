@@ -122,6 +122,9 @@ set autowrite
 " Display command
 set showcmd
 
+" visual autocomplete for command menu
+set wildmenu
+
 " Extend our undoable steps and preserve over restart (if available)
 if has('persistent_undo')
   set undodir=$TMPDIR,~/tmp,~/.vim/tmp,/tmp,/var/tmp
