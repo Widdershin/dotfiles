@@ -230,6 +230,8 @@ au FocusLost * silent! wa
 nmap <leader><leader> :call Send_to_Tmux("tst\n")<cr>
 nmap <leader>w :w <cr>
 
+noremap <leader>e :e! <cr>
+
 " Autocomplete tags
 iabbrev </<leader> </<C-X><C-O>
 
