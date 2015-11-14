@@ -6,6 +6,7 @@ call plug#begin('~/.nvim/plugged')
 Plug 'vim-auto-save'
 
 " Editing
+Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'
@@ -13,6 +14,7 @@ Plug 'tpope/vim-repeat'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ervandew/supertab'
 Plug 'Shougo/vimproc.vim'
+Plug 'terryma/vim-expand-region'
 
 " Linting
 Plug 'benekastah/neomake'
@@ -56,6 +58,8 @@ Plug 'dermusikman/sonicpi.vim'
 " Crystal
 Plug 'rhysd/vim-crystal'
 
+" Documentation
+Plug 'rizzatti/dash.vim'
 
 call plug#end()
 
@@ -185,6 +189,9 @@ nmap <leader>x :q<CR>
 noremap <c-p> :FZF<CR>
 let g:fzf_source = 'find . -type f | grep -v "node_modules/"'
 
+" Use v to expand region
+vmap v <Plug>(expand_region_expand)
+vmap <C-v> <Plug>(expand_region_shrink)
 
 " Tagbar
 nmap <leader>t :TagbarToggle<CR>
@@ -231,3 +238,9 @@ nmap , A,kj
 
 " Set async completion.
 let g:monster#completion#rcodetools#backend = "async_rct_complete"
+
+" Search dash
+nmap <silent> <leader>d <Plug>DashSearch
+
+" Allow . in visual mode
+vnoremap . :norm.<CR>
