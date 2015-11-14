@@ -28,6 +28,9 @@ antigen apply
 export NVM_DIR=~/.nvm
 source $(brew --prefix nvm)/nvm.sh
 
+# Nicer diff highlighting
+ln -sf "$(brew --prefix)/share/git-core/contrib/diff-highlight/diff-highlight" ~/bin/diff-highlight
+
 # command correction
 setopt correct
 
@@ -103,8 +106,23 @@ sshs() {
 
 alias ssh=sshs
 
-export EDITOR='vim'
+export EDITOR='nvim'
 stty -ixon
+
+
+# Fast ctrl-z from vi to terminal and back
+fancy-ctrl-z () {
+  if [[ $#BUFFER -eq 0 ]]; then
+    BUFFER="fg"
+    zle accept-line
+  else
+    zle push-input
+    zle clear-screen
+  fi
+}
+
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z
 
 if [[ "$PWD" == "/Users/nickj/Projects/powershop" ]]; then
   source .powenv
