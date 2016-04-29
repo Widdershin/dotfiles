@@ -28,6 +28,7 @@ Plug 'AnsiEsc.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'roman/golden-ratio'
+Plug 'jszakmeister/vim-togglecursor'
 
 " Theme
 Plug 'nanotech/jellybeans.vim'
@@ -57,6 +58,12 @@ Plug 'dermusikman/sonicpi.vim'
 
 " Crystal
 Plug 'rhysd/vim-crystal'
+
+" Typescript
+Plug 'leafgarland/typescript-vim'
+
+" Rust
+Plug 'rust-lang/rust.vim'
 
 " Documentation
 Plug 'rizzatti/dash.vim'
@@ -150,7 +157,7 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 
 "vim-auto-save
-let g:auto_save = 1  " enable AutoSave
+let g:auto_save = 0  " enable AutoSave
 let g:auto_save_in_insert_mode = 0
 let g:auto_save_silent = 1  " do not display the auto-save notification
 
@@ -180,7 +187,7 @@ let g:neomake_ruby_enabled_makers = ['rubocop']
 " -- Shortcuts --
 
 " kj to exit insert mode and save
-inoremap kj <Esc>:w<CR>
+inoremap kj <Esc>
 
 " format the entire file
 nmap <leader>fef ggVG=
@@ -230,7 +237,7 @@ au FocusLost * silent! wa
 nmap <leader><leader> :call Send_to_Tmux("tst\n")<cr>
 nmap <leader>w :w <cr>
 
-noremap <leader>e :e! <cr>
+noremap <leader>E :e!<cr>
 
 " Autocomplete tags
 iabbrev </<leader> </<C-X><C-O>

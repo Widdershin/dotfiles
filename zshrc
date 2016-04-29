@@ -1,29 +1,22 @@
 source ~/antigen/antigen.zsh
 
 # Load the oh-my-zsh's library.
-antigen use oh-my-zsh
+antigen lib oh-my-zsh
 
 # Bundles from the default repo (robbyrussell's oh-my-zsh).
-antigen bundle git
-antigen bundle command-not-found
-antigen bundle tmux
-antigen bundle extract
-#antigen bundle virtualenv
-antigen bundle chrissicool/zsh-256color
-antigen bundle zsh-users/zsh-completions src
-antigen bundle tarruda/zsh-autosuggestions 
+antigen-bundle chrissicool/zsh-256color
+antigen-bundle zsh-users/zsh-completions src
 
 # Syntax highlighting bundle.
-antigen bundle zsh-users/zsh-syntax-highlighting
+antigen-bundle zsh-users/zsh-syntax-highlighting
 
 # Load the theme.
-antigen theme https://gist.github.com/Widdershin/a080ec7a6af0f943f40f agnoster
+antigen-theme https://gist.github.com/Widdershin/a080ec7a6af0f943f40f agnoster
 
-antigen bundle https://gist.github.com/Widdershin/406b3a7cd8707741e1aa
-
+antigen-bundle https://gist.github.com/Widdershin/406b3a7cd8707741e1aa
 
 # Tell antigen that you're done.
-antigen apply
+antigen-apply
 
 export NVM_DIR=~/.nvm
 source $(brew --prefix nvm)/nvm.sh
@@ -36,11 +29,11 @@ setopt correct
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
-export PATH="$HOME/.rbenv/shims:$PATH"
+eval "$(rbenv init -)"
+
 export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.rbenv/bin:$PATH"
 
-eval "$(rbenv init -)"
 export PATH="$PATH:/usr/lib/postgresql/9.1/bin"
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/Projects
@@ -56,11 +49,34 @@ export PATH="$PATH:$GOPATH/bin"
 export POWERLINE_ROOT=$HOME/Library/Python/2.7/lib/python/site-packages/powerline
 export PYTHONPATH=/usr/local/lib/python2.7/site-packages/
 
+# git aliases
+alias gc="git commit -v"
+alias gc!='git commit -v --amend'
+alias ga="git add"
+alias gst="git status"
+alias gco="git checkout"
+alias gd="git diff"
+alias gdc="git diff --cached"
+alias grt='cd $(git rev-parse --show-toplevel || echo ".")'
+alias ggpush='git push origin $(current_branch)'
+alias ggpull='git pull origin $(current_branch)'
+
+compdef ggpush=git
+compdef ggpull=git
+compdef _git gc!=git-commit
+
+
+function current_branch() {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || \
+  ref=$(git rev-parse --short HEAD 2> /dev/null) || return
+  echo ${ref#refs/heads/}
+}
+
+alias vis="tmux split-window -hc "#{pane_current_path}" nvim"
 
 alias nz="export PS_MARKET=nz && sed -i bak 's/au/nz/' .powenv && rm .powenvbak && powder restart"
 alias au="export PS_MARKET=au && sed -i bak 's/nz/au/' .powenv && rm .powenvbak && powder restart"
 alias c="rails c"
-alias s="rails s"
 alias e="nvim"
 alias vi="nvim"
 alias be="bundle exec"
@@ -75,11 +91,16 @@ alias agst="watch -n 1 --color git status -sb"
 alias g-="gco -"
 alias gdc="git diff --cached"
 alias migrate="PS_MARKET=nz rake db:migrate && PS_MARKET=au rake db:migrate"
+alias pingle="gtimeout 3 ping google.com"
+alias ip="ifconfig en0 | grep 'inet\W' | cut -d' ' -f2"
+alias s="~/smart-switch.rb"
+alias gcof="git branch | cut -c3-50 | fzf | xargs git checkout"
+alias commitlog='git log --format="[`git branch|grep \*|cut -c3-` %h] %s"'
 
 alias mkrb="~/utils/mkrb/mkrb.py"
 alias mvrb="~/utils/mvrb/mvrb.py"
 
-alias ev="vim ~/.zshrc"
+alias ev="vi ~/.zshrc"
 alias sv="source ~/.zshrc"
 
 alias nzpsactive='([ `host secure.powershop.co.nz|cut -d" " -f4` "==" `host akl.secure.powershop.co.nz|cut -d" " -f4` ] && echo akl) || ([ `host secure.powershop.co.nz|cut -d" " -f4` "==" `host wlg.secure.powershop.co.nz|cut -d" " -f4` ] && echo wlg)'
@@ -88,7 +109,7 @@ alias nzpsinactive='([ `host secure.powershop.co.nz|cut -d" " -f4` "==" `host ak
 alias aupsactive='([ `host secure.powershop.com.au|cut -d" " -f4` "==" `host akl.secure.powershop.com.au|cut -d" " -f4` ] && echo akl) || ([ `host secure.powershop.com.au|cut -d" " -f4` "==" `host wlg.secure.powershop.com.au|cut -d" " -f4` ] && echo wlg)'
 alias aupsinactive='([ `host secure.powershop.com.au|cut -d" " -f4` "==" `host akl.secure.powershop.com.au|cut -d" " -f4` ] && echo wlg) || ([ `host secure.powershop.com.au|cut -d" " -f4` "==" `host wlg.secure.powershop.com.au|cut -d" " -f4` ] && echo akl)'
 
-alias beetil='open "https://desk.gotoassist.com/goto?q=$(git symbolic-ref --short HEAD | cut -c 2-)"'
+alias beetil='open "https://desk.gotoassist.com/goto?q=$(git symbolic-ref --short HEAD | cut -c 3-)"'
 alias review='open "https://git.powershop.co.nz/powerapps/powershop/compare/master...$(git symbolic-ref --short HEAD)"'
 alias whoisthatsnail="say 'Meow' && echo His name is Gary and he\'s very sensitive."
 
@@ -109,6 +130,14 @@ alias ssh=sshs
 export EDITOR='nvim'
 stty -ixon
 
+deploy-gh-pages () {
+  git checkout gh-pages
+  git fetch
+  git merge origin master --ff
+  npm run bundle
+  git commit -am "Update bundle"
+  git push origin gh-pages
+}
 
 # Fast ctrl-z from vi to terminal and back
 fancy-ctrl-z () {
