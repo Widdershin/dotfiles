@@ -45,6 +45,8 @@ export PATH="/usr/local/heroku/bin:$PATH"
 export GOPATH=$HOME
 export PATH="$PATH:$GOPATH/bin"
 
+export PATH="$PATH:/Users/nickj/.cabal/bin"
+
 # Powerline cfg
 export POWERLINE_ROOT=$HOME/Library/Python/2.7/lib/python/site-packages/powerline
 export PYTHONPATH=/usr/local/lib/python2.7/site-packages/
@@ -59,6 +61,7 @@ alias gd="git diff"
 alias gdc="git diff --cached"
 alias grt='cd $(git rev-parse --show-toplevel || echo ".")'
 alias ggpush='git push origin $(current_branch)'
+alias gl='git pull'
 alias ggpull='git pull origin $(current_branch)'
 
 compdef ggpush=git
@@ -95,7 +98,15 @@ alias pingle="gtimeout 3 ping google.com"
 alias ip="ifconfig en0 | grep 'inet\W' | cut -d' ' -f2"
 alias s="~/smart-switch.rb"
 alias gcof="git branch | cut -c3-50 | fzf | xargs git checkout"
-alias commitlog='git log --format="[`git branch|grep \*|cut -c3-` %h] %s"'
+gitlog ()
+{
+  git log master.. --format="%Cgreen[$(git symbolic-ref --short HEAD) %C(bold blue)%h]%C(green)%ar %C(bold blue)%an %Creset%s" --no-merges --reverse
+}
+
+commitlog ()
+{
+  git log master.. --format="%Cgreen[$(git symbolic-ref --short HEAD) %C(bold blue)%h] %Creset%s" --no-merges --reverse
+}
 
 alias mkrb="~/utils/mkrb/mkrb.py"
 alias mvrb="~/utils/mvrb/mvrb.py"
@@ -130,28 +141,7 @@ alias ssh=sshs
 export EDITOR='nvim'
 stty -ixon
 
-deploy-gh-pages () {
-  git checkout gh-pages
-  git fetch
-  git merge origin master --ff
-  npm run bundle
-  git commit -am "Update bundle"
-  git push origin gh-pages
-}
-
-# Fast ctrl-z from vi to terminal and back
-fancy-ctrl-z () {
-  if [[ $#BUFFER -eq 0 ]]; then
-    BUFFER="fg"
-    zle accept-line
-  else
-    zle push-input
-    zle clear-screen
-  fi
-}
-
-zle -N fancy-ctrl-z
-bindkey '^Z' fancy-ctrl-z
+if [ -e /Users/nickj/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/nickj/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
 if [[ "$PWD" == "/Users/nickj/Projects/powershop" ]]; then
   source .powenv

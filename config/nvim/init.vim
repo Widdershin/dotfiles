@@ -15,6 +15,8 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ervandew/supertab'
 Plug 'Shougo/vimproc.vim'
 Plug 'terryma/vim-expand-region'
+Plug 'FooSoft/vim-argwrap'
+Plug 'osyo-manga/vim-over'
 
 " Linting
 Plug 'benekastah/neomake'
@@ -29,6 +31,8 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'roman/golden-ratio'
 Plug 'jszakmeister/vim-togglecursor'
+Plug 'junegunn/goyo.vim'
+Plug 'tpope/vim-dispatch'
 
 " Theme
 Plug 'nanotech/jellybeans.vim'
@@ -45,7 +49,6 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'thoughtbot/vim-rspec'
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'osyo-manga/vim-monster'
-Plug 'danchoi/ri.vim'
 Plug 'jgdavey/vim-blockle'
 
 " Tmux
@@ -64,6 +67,10 @@ Plug 'leafgarland/typescript-vim'
 
 " Rust
 Plug 'rust-lang/rust.vim'
+
+" Idris
+Plug 'idris-hackers/idris-vim'
+
 
 " Documentation
 Plug 'rizzatti/dash.vim'
@@ -131,6 +138,10 @@ set showcmd
 
 " visual autocomplete for command menu
 set wildmenu
+"
+" stay in the middle of the screen
+set scrolloff=999
+set sidescrolloff=0
 
 " Extend our undoable steps and preserve over restart (if available)
 if has('persistent_undo')
@@ -182,8 +193,14 @@ xmap <space> <leader>
 " Neomake
 autocmd! BufRead,BufWritePost * Neomake
 let g:neomake_javascript_enabled_makers = ['eslint']
-let g:neomake_ruby_enabled_makers = ['rubocop']
-
+let g:neomake_warning_sign = {
+  \ 'text': 'W',
+  \ 'texthl': 'WarningMsg',
+  \ }
+let g:neomake_error_sign = {
+  \ 'text': 'E',
+  \ 'texthl': 'ErrorMsg',
+  \ }
 " -- Shortcuts --
 
 " kj to exit insert mode and save
@@ -197,7 +214,7 @@ nmap <leader>x :q<CR>
 
 " FZF
 noremap <c-p> :FZF<CR>
-let g:fzf_source = 'find . -type f | grep -v "node_modules/"'
+let $FZF_DEFAULT_COMMAND = 'ag -l -g ""'
 
 " Use v to expand region
 vmap v <Plug>(expand_region_expand)
@@ -209,6 +226,9 @@ nmap <leader>t :TagbarToggle<CR>
 " insert lines without entering insert mode
 noremap <leader>o o<Esc>k
 noremap <leader>O O<Esc>j
+
+" Arg wrap
+nnoremap <silent> <leader>a :ArgWrap<CR>
 
 " Run specs
 noremap <BS> :call RunCurrentSpecFile()<CR>
@@ -234,6 +254,8 @@ augroup END
 " Save on focus lost
 au FocusLost * silent! wa
 
+au BufRead,BufNewFile *.es6 set filetype=javascript
+
 nmap <leader><leader> :call Send_to_Tmux("tst\n")<cr>
 nmap <leader>w :w <cr>
 
@@ -253,6 +275,9 @@ let g:monster#completion#rcodetools#backend = "async_rct_complete"
 
 " Search dash
 nmap <silent> <leader>d <Plug>DashSearch
+
+" Open vim-over command line
+nmap <silent> <leader>D :OverCommandLine<cr>
 
 " Allow . in visual mode
 vnoremap . :norm.<CR>
