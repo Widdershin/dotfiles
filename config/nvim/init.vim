@@ -1,5 +1,4 @@
 " -- Plugins --
-
 call plug#begin('~/.nvim/plugged')
 
 " Autosave
@@ -7,7 +6,6 @@ Plug 'vim-auto-save'
 
 " Editing
 Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-repeat'
@@ -31,7 +29,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'roman/golden-ratio'
 Plug 'jszakmeister/vim-togglecursor'
-Plug 'junegunn/goyo.vim'
+Plug 'reedes/vim-pencil'
 Plug 'tpope/vim-dispatch'
 
 " Theme
@@ -214,7 +212,7 @@ nmap <leader>x :q<CR>
 
 " FZF
 noremap <c-p> :FZF<CR>
-let $FZF_DEFAULT_COMMAND = 'ag -l -g ""'
+let $FZF_DEFAULT_COMMAND = 'ag --ignore ".git/*" --hidden -l -g ""'
 
 " Use v to expand region
 vmap v <Plug>(expand_region_expand)
@@ -256,7 +254,7 @@ au FocusLost * silent! wa
 
 au BufRead,BufNewFile *.es6 set filetype=javascript
 
-nmap <leader><leader> :call Send_to_Tmux("tst\n")<cr>
+nmap <leader><leader> :w <cr>
 nmap <leader>w :w <cr>
 
 noremap <leader>E :e!<cr>
