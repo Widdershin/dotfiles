@@ -1,37 +1,29 @@
 source ~/antigen/antigen.zsh
 
-# Load the oh-my-zsh's library.
-antigen lib oh-my-zsh
-
 # Bundles from the default repo (robbyrussell's oh-my-zsh).
-antigen-bundle chrissicool/zsh-256color
-antigen-bundle zsh-users/zsh-completions src
+antigen bundle chrissicool/zsh-256color
+antigen bundle zsh-users/zsh-completions src
 
 # Syntax highlighting bundle.
-antigen-bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-syntax-highlighting
 
 # Load the theme.
-antigen-theme https://gist.github.com/Widdershin/a080ec7a6af0f943f40f agnoster
-
-antigen-bundle https://gist.github.com/Widdershin/406b3a7cd8707741e1aa
+antigen theme https://gist.github.com/Widdershin/a080ec7a6af0f943f40f agnoster
 
 # Tell antigen that you're done.
-antigen-apply
-
-export NVM_DIR=~/.nvm
-source $(brew --prefix nvm)/nvm.sh
+antigen apply
 
 # Nicer diff highlighting
-ln -sf "$(brew --prefix)/share/git-core/contrib/diff-highlight/diff-highlight" ~/bin/diff-highlight
+# ln -sf "$(brew --prefix)/share/git-core/contrib/diff-highlight/diff-highlight" ~/bin/diff-highlight
 
 # command correction
 setopt correct
 
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
+export PATH="/usr/local/bin:$PATH"
+export PATH="/Users/nickj/.local/bin:$PATH"
+
 eval "$(rbenv init -)"
 
-export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.rbenv/bin:$PATH"
 
 export PATH="$PATH:/usr/lib/postgresql/9.1/bin"
@@ -47,9 +39,14 @@ export PATH="$PATH:$GOPATH/bin"
 
 export PATH="$PATH:/Users/nickj/.cabal/bin"
 
-# Powerline cfg
-export POWERLINE_ROOT=$HOME/Library/Python/2.7/lib/python/site-packages/powerline
-export PYTHONPATH=/usr/local/lib/python2.7/site-packages/
+# History
+HISTSIZE=5000000               #How many lines of history to keep in memory
+HISTFILE=~/.zsh_history     #Where to save history to disk
+SAVEHIST=5000000 #Number of history entries to save to disk
+
+setopt    appendhistory     #Append history to the history file (no overwriting)
+setopt    sharehistory      #Share history across terminals
+setopt incappendhistory #Immediately append to the history file, not just when a term is killed
 
 # git aliases
 alias gc="git commit -v"
@@ -75,13 +72,31 @@ function current_branch() {
   echo ${ref#refs/heads/}
 }
 
-alias vis="tmux split-window -hc "#{pane_current_path}" nvim"
+function clone {
+  repo_name=$(echo $* | rev | cut -d '/' -f1 | rev | cut -d '.' -f1)
+  dir=~/Projects/$repo_name
 
-alias nz="export PS_MARKET=nz && sed -i bak 's/au/nz/' .powenv && rm .powenvbak && powder restart"
-alias au="export PS_MARKET=au && sed -i bak 's/nz/au/' .powenv && rm .powenvbak && powder restart"
+  tmux switch-client -t "$(TMUX= tmux -S "${TMUX%,*,*}" new-session -dP -s $repo_name "git clone $* $dir; cd $dir; zsh")"
+}
+
+function db() {
+  git_dir=$(git rev-parse --show-toplevel)
+
+  PGHOST=localhost \
+    PGUSER=postgres \
+    PGPASSWORD=bananapancakes \
+    PGPORT=$(cat "$git_dir"/.pgport) \
+    "$@"
+}
+
+alias vis="tmux split-window -hc "#{pane_current_path}" reattach-to-user-namespace nvim"
+
+alias production="AWS_DEFAULT_PROFILE=prod"
+alias operator="AWS_DEFAULT_PROFILE=operator"
 alias c="rails c"
 alias e="nvim"
-alias vi="nvim"
+alias nvim="reattach-to-user-namespace nvim"
+alias vi="reattach-to-user-namespace nvim"
 alias be="bundle exec"
 alias bi="bundle install"
 alias rails='be rails'
@@ -93,7 +108,6 @@ alias aub="au be"
 alias agst="watch -n 1 --color git status -sb"
 alias g-="gco -"
 alias gdc="git diff --cached"
-alias migrate="PS_MARKET=nz rake db:migrate && PS_MARKET=au rake db:migrate"
 alias pingle="gtimeout 3 ping google.com"
 alias ip="ifconfig en0 | grep 'inet\W' | cut -d' ' -f2"
 alias s="~/smart-switch.rb"
@@ -114,29 +128,9 @@ alias mvrb="~/utils/mvrb/mvrb.py"
 alias ev="vi ~/.zshrc"
 alias sv="source ~/.zshrc"
 
-alias nzpsactive='([ `host secure.powershop.co.nz|cut -d" " -f4` "==" `host akl.secure.powershop.co.nz|cut -d" " -f4` ] && echo akl) || ([ `host secure.powershop.co.nz|cut -d" " -f4` "==" `host wlg.secure.powershop.co.nz|cut -d" " -f4` ] && echo wlg)'
-alias nzpsinactive='([ `host secure.powershop.co.nz|cut -d" " -f4` "==" `host akl.secure.powershop.co.nz|cut -d" " -f4` ] && echo wlg) || ([ `host secure.powershop.co.nz|cut -d" " -f4` "==" `host wlg.secure.powershop.co.nz|cut -d" " -f4` ] && echo akl)'
-
-alias aupsactive='([ `host secure.powershop.com.au|cut -d" " -f4` "==" `host akl.secure.powershop.com.au|cut -d" " -f4` ] && echo akl) || ([ `host secure.powershop.com.au|cut -d" " -f4` "==" `host wlg.secure.powershop.com.au|cut -d" " -f4` ] && echo wlg)'
-alias aupsinactive='([ `host secure.powershop.com.au|cut -d" " -f4` "==" `host akl.secure.powershop.com.au|cut -d" " -f4` ] && echo wlg) || ([ `host secure.powershop.com.au|cut -d" " -f4` "==" `host wlg.secure.powershop.com.au|cut -d" " -f4` ] && echo akl)'
-
-alias beetil='open "https://desk.gotoassist.com/goto?q=$(git symbolic-ref --short HEAD | cut -c 3-)"'
-alias review='open "https://git.powershop.co.nz/powerapps/powershop/compare/master...$(git symbolic-ref --short HEAD)"'
 alias whoisthatsnail="say 'Meow' && echo His name is Gary and he\'s very sensitive."
 
-sshs() {
-  if [[ $1 == *"prod"* ]]
-  then
-    PS_ENV='_prod'
-  else
-    PS_ENV=''
-  fi
-
-  ssh $@ "cat > /tmp/.bashrc_temp_$USER" < ~/.bashrc_remote$PS_ENV 2> /dev/null
-  ssh -t $@ "ACTIVE_PROD='$ACTIVE_PROD' bash --rcfile /tmp/.bashrc_temp_$USER ; rm /tmp/.bashrc_temp_$USER"
-}
-
-alias ssh=sshs
+[ -f $HOME/Projects/spectacle-workflow-tools/wt ] && source $HOME/Projects/spectacle-workflow-tools/wt
 
 export EDITOR='nvim'
 stty -ixon
@@ -170,8 +164,14 @@ else
         $MOTD
     fi
 fi
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-export FZF_DEFAULT_COMMAND='ag -l -g ""'
 
 export PATH="/usr/local/sbin:$PATH"
+
+bindkey -e
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='ag -l -g ""'
+
+. $HOME/.asdf/asdf.sh
+
+. $HOME/.asdf/completions/asdf.bash
+

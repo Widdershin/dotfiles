@@ -1,9 +1,6 @@
 " -- Plugins --
 call plug#begin('~/.nvim/plugged')
 
-" Autosave
-Plug 'vim-auto-save'
-
 " Editing
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-surround'
@@ -15,6 +12,10 @@ Plug 'Shougo/vimproc.vim'
 Plug 'terryma/vim-expand-region'
 Plug 'FooSoft/vim-argwrap'
 Plug 'osyo-manga/vim-over'
+Plug 'junegunn/vim-easy-align'
+Plug 'sbdchd/neoformat'
+Plug 'chrisbra/NrrwRgn'
+Plug 'sjl/gundo.vim'
 
 " Linting
 Plug 'benekastah/neomake'
@@ -24,13 +25,15 @@ Plug 'bling/vim-airline'
 Plug 'scrooloose/nerdtree'
 Plug 'majutsushi/tagbar'
 Plug 'ap/vim-css-color'
-Plug 'AnsiEsc.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
+Plug 'junegunn/fzf.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'roman/golden-ratio'
-Plug 'jszakmeister/vim-togglecursor'
+" Plug 'jszakmeister/vim-togglecursor'
 Plug 'reedes/vim-pencil'
 Plug 'tpope/vim-dispatch'
+Plug 'junegunn/vim-peekaboo'
+Plug 'junegunn/goyo.vim'
 
 " Theme
 Plug 'nanotech/jellybeans.vim'
@@ -41,6 +44,12 @@ Plug 'tomasr/molokai'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
+" Tmux
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'jgdavey/tslime.vim'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'sjl/vitality.vim'
+
 " Ruby
 Plug 'tpope/vim-rails'
 Plug 'vim-ruby/vim-ruby'
@@ -48,30 +57,19 @@ Plug 'thoughtbot/vim-rspec'
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'osyo-manga/vim-monster'
 Plug 'jgdavey/vim-blockle'
-
-" Tmux
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'jgdavey/tslime.vim'
-Plug 'tmux-plugins/vim-tmux-focus-events'
-Plug 'sjl/vitality.vim'
-
 Plug 'dermusikman/sonicpi.vim'
 
-" Crystal
-Plug 'rhysd/vim-crystal'
+" Elm
+Plug 'ElmCast/elm-vim'
 
 " Typescript
 Plug 'leafgarland/typescript-vim'
 
+" Haskell
+Plug 'parsonsmatt/intero-neovim'
+
 " Rust
 Plug 'rust-lang/rust.vim'
-
-" Idris
-Plug 'idris-hackers/idris-vim'
-
-
-" Documentation
-Plug 'rizzatti/dash.vim'
 
 call plug#end()
 
@@ -85,7 +83,7 @@ colorscheme jellybeans
 set nowrap
 
 " Redraw less for vroom vroom
-set lazyredraw
+" set lazyredraw
 
 " Encoding
 set encoding=utf-8
@@ -98,6 +96,9 @@ set relativenumber
 set hlsearch
 set ignorecase
 set smartcase
+
+" Preview replace
+set inccommand=nosplit
 
 " 2 space tabs
 set expandtab
@@ -152,11 +153,7 @@ set undolevels=10000
 " vim-spec options
 let g:rspec_command = ':call Send_to_Tmux("spec {spec}\n")'
 
-" Syntastic
-let g:syntastic_mode_map = { 'mode': 'passive' }
-let g:syntastic_javascript_checkers = ['standard']
-
-"airline
+" airline
 let g:airline_powerline_fonts = 1
 
 " Enable the list of buffers
@@ -165,14 +162,8 @@ let g:airline#extensions#tabline#enabled = 1
 " Show just the filename
 let g:airline#extensions#tabline#fnamemod = ':t'
 
-"vim-auto-save
-let g:auto_save = 0  " enable AutoSave
-let g:auto_save_in_insert_mode = 0
-let g:auto_save_silent = 1  " do not display the auto-save notification
-
-"Command t
-let g:CommandTMaxHeight = 25
-let g:CommandTFileScanner = 'watchman'
+let g:airline#extensions#hunks#enabled = 0
+let g:airline_section_y = ''
 
 "Navigator
 let g:tmux_navigator_save_on_switch = 1
@@ -211,8 +202,9 @@ nmap <leader>fef ggVG=
 nmap <leader>x :q<CR>
 
 " FZF
-noremap <c-p> :FZF<CR>
+noremap <c-p> :Files<CR>
 let $FZF_DEFAULT_COMMAND = 'ag --ignore ".git/*" --hidden -l -g ""'
+let g:fzf_buffers_jump = 1
 
 " Use v to expand region
 vmap v <Plug>(expand_region_expand)
@@ -233,7 +225,7 @@ noremap <BS> :call RunCurrentSpecFile()<CR>
 noremap \ :call RunNearestSpec()<CR>
 
 " Explore
-noremap <leader>n :NERDTreeToggle<CR>
+noremap <leader>n :NERDTreeFind<CR>
 
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
@@ -271,11 +263,72 @@ nmap , A,kj
 " Set async completion.
 let g:monster#completion#rcodetools#backend = "async_rct_complete"
 
-" Search dash
-nmap <silent> <leader>d <Plug>DashSearch
+" Sublime style find and replace
+nmap <leader>d :%s/<c-r><c-w>/<c-r><c-w>
 
-" Open vim-over command line
-nmap <silent> <leader>D :OverCommandLine<cr>
+nmap <leader>D :%s/<c-r>//<c-r>/
 
 " Allow . in visual mode
 vnoremap . :norm.<CR>
+
+" Easy align
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+" Folding
+" set foldmethod=indent
+
+let g:neoformat_typescript_prettier = {
+        \ 'exe': 'prettier',
+        \ 'args': ['--stdin',  '--parser', 'typescript'],
+        \ 'stdin': 1
+        \ }
+
+let g:neoformat_javascript_prettier = {
+        \ 'exe': 'prettier',
+        \ 'args': ['--stdin'],
+        \ 'stdin': 1
+        \ }
+
+nmap <silent> <leader>p :Neoformat<cr>
+
+augroup interoMaps
+  au!
+  " Maps for intero. Restrict to Haskell buffers so the bindings don't collide.
+
+  " Background process and window management
+  au FileType haskell nnoremap <silent> <leader>is :InteroStart<CR>
+  au FileType haskell nnoremap <silent> <leader>ik :InteroKill<CR>
+
+  " Open intero/GHCi split horizontally
+  au FileType haskell nnoremap <silent> <leader>io :InteroOpen<CR>
+  " Open intero/GHCi split vertically
+  au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H
+  au FileType haskell nnoremap <silent> <leader>ih :InteroHide<CR>
+
+  " Reloading (pick one)
+  " Automatically reload on save
+  au BufWritePost *.hs InteroReload
+  " Manually save and reload
+  au FileType haskell nnoremap <silent> <leader>wr :w \| :InteroReload<CR>
+
+  " Load individual modules
+  au FileType haskell nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
+  au FileType haskell nnoremap <silent> <leader>if :InteroLoadCurrentFile<CR>
+
+  " Type-related information
+  " Heads up! These next two differ from the rest.
+  au FileType haskell map <silent> <leader>t <Plug>InteroGenericType
+  au FileType haskell map <silent> <leader>T <Plug>InteroType
+  au FileType haskell nnoremap <silent> <leader>it :InteroTypeInsert<CR>
+
+  " Navigation
+  au FileType haskell nnoremap <silent> <leader>jd :InteroGoToDef<CR>
+
+  " Managing targets
+  " Prompts you to enter targets (no silent):
+  au FileType haskell nnoremap <leader>ist :InteroSetTargets<SPACE>
+augroup END

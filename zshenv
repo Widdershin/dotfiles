@@ -14,3 +14,6 @@ function strip_diff_leading_symbols(){
 function rule () {
 	printf "%$(tput cols)s\n"|tr " " "─"
 }
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='ag -l -g ""'
