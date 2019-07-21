@@ -7,7 +7,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-repeat'
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'ervandew/supertab'
+Plug 'zxqfl/tabnine-vim'
 Plug 'Shougo/vimproc.vim'
 Plug 'terryma/vim-expand-region'
 Plug 'FooSoft/vim-argwrap'
@@ -70,6 +70,9 @@ Plug 'parsonsmatt/intero-neovim'
 
 " Rust
 Plug 'rust-lang/rust.vim'
+
+" Nix
+Plug 'LnL7/vim-nix'
 
 call plug#end()
 

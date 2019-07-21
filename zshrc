@@ -7,8 +7,8 @@ antigen bundle zsh-users/zsh-completions src
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
 
-# Load the theme.
-antigen theme https://gist.github.com/Widdershin/a080ec7a6af0f943f40f agnoster
+antigen bundle mafredri/zsh-async
+antigen bundle sindresorhus/pure
 
 # Tell antigen that you're done.
 antigen apply
@@ -20,7 +20,7 @@ antigen apply
 setopt correct
 
 export PATH="/usr/local/bin:$PATH"
-export PATH="/Users/nickj/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 eval "$(rbenv init -)"
 
@@ -37,7 +37,7 @@ export PATH="/usr/local/heroku/bin:$PATH"
 export GOPATH=$HOME
 export PATH="$PATH:$GOPATH/bin"
 
-export PATH="$PATH:/Users/nickj/.cabal/bin"
+export PATH="$PATH:$HOME/.cabal/bin"
 
 # History
 HISTSIZE=5000000               #How many lines of history to keep in memory
@@ -101,8 +101,8 @@ alias be="bundle exec"
 alias bi="bundle install"
 alias rails='be rails'
 alias rake='be rake'
-alias spec='be spring rspec'
-alias cuke='be spring cucumber'
+alias spec='be rspec'
+alias cuke='be cucumber'
 alias nzb="nz be"
 alias aub="au be"
 alias agst="watch -n 1 --color git status -sb"
@@ -135,11 +135,7 @@ alias whoisthatsnail="say 'Meow' && echo His name is Gary and he\'s very sensiti
 export EDITOR='nvim'
 stty -ixon
 
-if [ -e /Users/nickj/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/nickj/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
-
-if [[ "$PWD" == "/Users/nickj/Projects/powershop" ]]; then
-  source .powenv
-fi
+if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
 if [[ "$TERM" != "screen-256color" ]] &&
     ; then
@@ -171,7 +167,12 @@ bindkey -e
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='ag -l -g ""'
 
-. $HOME/.asdf/asdf.sh
+export PGDATA='/usr/local/var/postgres'
 
-. $HOME/.asdf/completions/asdf.bash
-
+eval $(docker-machine env default)
+dosh ()
+{
+  container=$(docker ps | grep -v CONTAINER | fzf --preview 'docker exec $(echo {} | cut -d" " -f1) ps aux' | cut -d' ' -f1)
+  docker exec -it $container bash
+}
+eval "$(direnv hook zsh)"
