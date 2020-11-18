@@ -1,0 +1,25 @@
+{
+  "coc.preferences.hoverTarget": "echo",
+  "signature.target": "echo",
+  "codeLens.enable": true,
+  "suggest.autoTrigger": "none",
+  "languageserver": {
+    "haskell": {
+      "command": "hie-wrapper",
+      "rootPatterns": [
+        ".stack.yaml",
+        "cabal.config",
+        "package.yaml"
+      ],
+      "filetypes": [
+        "hs",
+        "lhs",
+        "haskell"
+      ],
+      "initializationOptions": {
+        "languageServerHaskell": {
+        }
+      }
+    }
+  }
+}

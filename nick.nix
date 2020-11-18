@@ -1,5 +1,22 @@
 self: super:
 
+let
+  update-prefetch-src = self.fetchFromGitHub {
+    owner = "justinwoo";
+    repo = "update-prefetch";
+    rev = "80b8f6eaa0108a1666d0e8bd8dc81ba810ce5f77";
+    sha256 = "04sgd37rh5zvx01c3cqf1p2c2alaqzd4r160wspnw6y1avwi1apz";
+  };
+  latestPkgs =
+    import (builtins.fetchTarball {
+      # Descriptive name to make the store path easier to identify
+      name = "nixos-unstable-2019-10-10";
+      # Commit hash for nixos-unstable as of 2018-01-06
+      url = https://github.com/nixos/nixpkgs/archive/1f5fa9a8298ec7411431da981b4f1a79e10f2a8e.tar.gz;
+      # Hash obtained using `nix-prefetch-url --unpack <url>`
+      sha256 = "1696ymp66ndbb0b49sbqi2g3y49k041hv6gd0i6kgfrvi1kqkidm";
+    }) {};
+in
 {
   userPackages              = super.userPackages or {} // {
     self.config.allowUnfree = true;
@@ -17,30 +34,19 @@ self: super:
     git                     = self.git;
     httpie                  = self.httpie;
     jq                      = self.jq;
-    neovim                  = self.neovim;
+    neovim                  = latestPkgs.neovim;
     pstree                  = self.pstree;
     tig                     = self.tig;
     tmux                    = self.tmux;
-    tmux-fzf-url            = self.tmuxPlugins.fzf-tmux-url;
     tree                    = self.tree;
     watch                   = self.watch;
     wget                    = self.wget;
     zsh                     = self.zsh;
     ncdu                    = self.ncdu;
-    youtube-dl              = self.youtube-dl;
-    ffmpeg                  = self.ffmpeg;
-    gettext                 = self.gettext;
-    rlwrap                  = self.rlwrap;
-    direnv                  = self.direnv;
-
-    # databases
-    postgresql              = self.postgresql;
-
-    # docker
-    docker                  = self.docker;
-    docker_machine          = self.docker-machine;
-    docker_compose          = self.docker_compose;
-
+    reattach-to-user-namespace = self.reattach-to-user-namespace;
+siege = self.siege;
+    mosh = self.mosh;
+htop = self.htop;
     # programming languages
     node                    = self.nodejs-10_x;
     shellcheck              = self.shellcheck;
@@ -52,15 +58,13 @@ self: super:
     # devops
     terraform               = self.terraform;
     aws                     = self.awscli;
-    python3                 = self.python3;
-    pip                     = self.python37Packages.pip;
+    python                 = self.python27;
     nixops                  = self.nixopsUnstable;
     heroku                  = self.heroku;
 
     # nix tooling
-    pypi2nix                = self.pypi2nix;
-    bundix                  = self.bundix;
     prefetch-github         = self.nix-prefetch-github;
+    update-prefetch = import "${update-prefetch-src}/default.nix" {};
 
     # haskell tools
     hoogle                  = self.haskellPackages.hoogle;

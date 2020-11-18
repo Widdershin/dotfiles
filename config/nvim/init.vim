@@ -16,6 +16,8 @@ Plug 'junegunn/vim-easy-align'
 Plug 'sbdchd/neoformat'
 Plug 'chrisbra/NrrwRgn'
 Plug 'sjl/gundo.vim'
+Plug 'BurntSushi/ripgrep'
+Plug 'ihsanturk/neuron.vim'
 
 " Linting
 Plug 'benekastah/neomake'
@@ -23,7 +25,6 @@ Plug 'benekastah/neomake'
 " UI
 Plug 'bling/vim-airline'
 Plug 'scrooloose/nerdtree'
-Plug 'majutsushi/tagbar'
 Plug 'ap/vim-css-color'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 Plug 'junegunn/fzf.vim'
@@ -64,9 +65,6 @@ Plug 'ElmCast/elm-vim'
 
 " Typescript
 Plug 'leafgarland/typescript-vim'
-
-" Haskell
-Plug 'parsonsmatt/intero-neovim'
 
 " Rust
 Plug 'rust-lang/rust.vim'
@@ -136,7 +134,6 @@ set autoread
 set autowrite
 
 " Display command
-set showcmd
 
 " visual autocomplete for command menu
 set wildmenu
@@ -152,6 +149,26 @@ if has('persistent_undo')
   set undoreload=10000
 end
 set undolevels=10000
+
+set hidden
+
+let g:LanguageClient_serverCommands = {
+    \ 'typescript': ['/Users/nick/Projects/apm-nodejs/node_modules/.bin/typescript-language-server', '--stdio']
+    \ }
+
+" Use K to show documentation in preview window
+nnoremap  K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 " vim-spec options
 let g:rspec_command = ':call Send_to_Tmux("spec {spec}\n")'
@@ -204,6 +221,8 @@ nmap <leader>fef ggVG=
 " close buffer
 nmap <leader>x :q<CR>
 
+vmap <leader>s :sort<CR>
+
 " FZF
 noremap <c-p> :Files<CR>
 let $FZF_DEFAULT_COMMAND = 'ag --ignore ".git/*" --hidden -l -g ""'
@@ -249,6 +268,12 @@ au FocusLost * silent! wa
 
 au BufRead,BufNewFile *.es6 set filetype=javascript
 
+augroup Markdown
+  autocmd!
+  autocmd FileType markdown set wrap
+  autocmd FileType markdown set linebreak
+augroup END
+
 nmap <leader><leader> :w <cr>
 nmap <leader>w :w <cr>
 
@@ -258,18 +283,21 @@ noremap <leader>E :e!<cr>
 iabbrev </<leader> </<C-X><C-O>
 
 " Add a semicolon to end of line when pressing ;
-nmap ; A;kj
+nmap ; mzA;kj`z
 
 " Add a comma to end of line when pressing ,
-nmap , A,kj
+nmap , mzA,kj`z
+
+nmap 90 ysiw(
+nmap 09 ysiw{
 
 " Set async completion.
 let g:monster#completion#rcodetools#backend = "async_rct_complete"
 
 " Sublime style find and replace
-nmap <leader>d :%s/<c-r><c-w>/<c-r><c-w>
-
-nmap <leader>D :%s/<c-r>//<c-r>/
+nmap <leader>d :%s/<c-r><c-w>/<c-r><c-w>/g<Left><Left>
+nmap <leader>D :s/<c-r><c-w>/<c-r><c-w>/g<Left><Left>
+vmap <leader>d :s/<c-r><c-w>/<c-r><c-w>/g<Left><Left>
 
 " Allow . in visual mode
 vnoremap . :norm.<CR>
@@ -297,41 +325,3 @@ let g:neoformat_javascript_prettier = {
         \ }
 
 nmap <silent> <leader>p :Neoformat<cr>
-
-augroup interoMaps
-  au!
-  " Maps for intero. Restrict to Haskell buffers so the bindings don't collide.
-
-  " Background process and window management
-  au FileType haskell nnoremap <silent> <leader>is :InteroStart<CR>
-  au FileType haskell nnoremap <silent> <leader>ik :InteroKill<CR>
-
-  " Open intero/GHCi split horizontally
-  au FileType haskell nnoremap <silent> <leader>io :InteroOpen<CR>
-  " Open intero/GHCi split vertically
-  au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H
-  au FileType haskell nnoremap <silent> <leader>ih :InteroHide<CR>
-
-  " Reloading (pick one)
-  " Automatically reload on save
-  au BufWritePost *.hs InteroReload
-  " Manually save and reload
-  au FileType haskell nnoremap <silent> <leader>wr :w \| :InteroReload<CR>
-
-  " Load individual modules
-  au FileType haskell nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
-  au FileType haskell nnoremap <silent> <leader>if :InteroLoadCurrentFile<CR>
-
-  " Type-related information
-  " Heads up! These next two differ from the rest.
-  au FileType haskell map <silent> <leader>t <Plug>InteroGenericType
-  au FileType haskell map <silent> <leader>T <Plug>InteroType
-  au FileType haskell nnoremap <silent> <leader>it :InteroTypeInsert<CR>
-
-  " Navigation
-  au FileType haskell nnoremap <silent> <leader>jd :InteroGoToDef<CR>
-
-  " Managing targets
-  " Prompts you to enter targets (no silent):
-  au FileType haskell nnoremap <leader>ist :InteroSetTargets<SPACE>
-augroup END
