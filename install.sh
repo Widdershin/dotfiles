@@ -8,3 +8,4 @@ ln -s $PWD/tmux.conf $HOME/.tmux.conf
 ln -s $PWD/tmux.theme $HOME/.tmux.theme
 ln -s $PWD/zshenv $HOME/.zshenv
 ln -s $PWD/zshrc $HOME/.zshrc
+ln -s $PWD/smart-switch.rb $HOME/smart-switch.rb
