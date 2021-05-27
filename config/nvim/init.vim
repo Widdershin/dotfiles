@@ -6,40 +6,42 @@ Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-repeat'
-Plug 'AndrewRadev/splitjoin.vim'
-Plug 'zxqfl/tabnine-vim'
 Plug 'Shougo/vimproc.vim'
-Plug 'terryma/vim-expand-region'
 Plug 'FooSoft/vim-argwrap'
 Plug 'osyo-manga/vim-over'
 Plug 'junegunn/vim-easy-align'
-Plug 'sbdchd/neoformat'
 Plug 'chrisbra/NrrwRgn'
 Plug 'sjl/gundo.vim'
 Plug 'BurntSushi/ripgrep'
-Plug 'ihsanturk/neuron.vim'
+Plug 'fiatjaf/neuron.vim'
+
+" Completion
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+if has('win32') || has('win64')
+  Plug 'tbodt/deoplete-tabnine', { 'do': 'powershell.exe .\install.ps1' }
+else
+  Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
+endif
+
+" Navigation
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
+Plug 'junegunn/fzf.vim'
+Plug 'scrooloose/nerdtree'
 
 " Linting
-Plug 'benekastah/neomake'
+Plug 'dense-analysis/ale'
 
 " UI
 Plug 'bling/vim-airline'
-Plug 'scrooloose/nerdtree'
 Plug 'ap/vim-css-color'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
-Plug 'junegunn/fzf.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'roman/golden-ratio'
 " Plug 'jszakmeister/vim-togglecursor'
-Plug 'reedes/vim-pencil'
 Plug 'tpope/vim-dispatch'
 Plug 'junegunn/vim-peekaboo'
-Plug 'junegunn/goyo.vim'
 
 " Theme
 Plug 'nanotech/jellybeans.vim'
-Plug 'Yggdroot/indentLine'
-Plug 'tomasr/molokai'
 
 " Git
 Plug 'tpope/vim-fugitive'
@@ -184,12 +186,12 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 
 let g:airline#extensions#hunks#enabled = 0
 let g:airline_section_y = ''
+let g:airline#extensions#ale#enabled = 0
+let g:airline#extensions#branch#enabled = 0
+let g:airline#extensions#whitespace#enabled = 0
 
 "Navigator
 let g:tmux_navigator_save_on_switch = 1
-
-" Indent lines
-let g:indentLine_color_term = 000
 
 " Set leader to space
 nmap <space> <leader>
@@ -199,17 +201,6 @@ nmap <space><space> <leader><leader>
 " space char).
 xmap <space> <leader>
 
-" Neomake
-autocmd! BufRead,BufWritePost * Neomake
-let g:neomake_javascript_enabled_makers = ['eslint']
-let g:neomake_warning_sign = {
-  \ 'text': 'W',
-  \ 'texthl': 'WarningMsg',
-  \ }
-let g:neomake_error_sign = {
-  \ 'text': 'E',
-  \ 'texthl': 'ErrorMsg',
-  \ }
 " -- Shortcuts --
 
 " kj to exit insert mode and save
@@ -244,7 +235,9 @@ nnoremap <silent> <leader>a :ArgWrap<CR>
 
 " Run specs
 noremap <BS> :call RunCurrentSpecFile()<CR>
-noremap \ :call RunNearestSpec()<CR>
+
+nnoremap <leader>{ :ALEPreviousWrap<CR>
+nnoremap <leader>} :ALENextWrap<CR>
 
 " Explore
 noremap <leader>n :NERDTreeFind<CR>
@@ -288,8 +281,8 @@ nmap ; mzA;kj`z
 " Add a comma to end of line when pressing ,
 nmap , mzA,kj`z
 
-nmap 90 ysiw(
-nmap 09 ysiw{
+nmap <leader>9 ysiw(
+nmap <leader>0 ysiw{
 
 " Set async completion.
 let g:monster#completion#rcodetools#backend = "async_rct_complete"
@@ -312,16 +305,34 @@ nmap ga <Plug>(EasyAlign)
 " Folding
 " set foldmethod=indent
 
-let g:neoformat_typescript_prettier = {
-        \ 'exe': 'prettier',
-        \ 'args': ['--stdin',  '--parser', 'typescript'],
-        \ 'stdin': 1
-        \ }
+let g:ale_completion_enabled = 0
+let g:ale_lint_on_text_changed = 0
+let g:ale_fix_on_save = 1
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'javascript': ['eslint', 'prettier'],
+\   'typescript': ['eslint', 'prettier'],
+\}
 
-let g:neoformat_javascript_prettier = {
-        \ 'exe': 'prettier',
-        \ 'args': ['--stdin'],
-        \ 'stdin': 1
-        \ }
+nmap <leader>h :ALEHover<CR>
 
-nmap <silent> <leader>p :Neoformat<cr>
+let g:deoplete#enable_at_startup = 1
+
+function! s:check_back_space() abort "{{{
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction"}}}
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ deoplete#manual_complete()
+
+set completeopt-=preview
+call deoplete#custom#source('ale', 'rank', 999)
+autocmd FileType gitcommit  let b:deoplete_disable_auto_complete = 1
+
+let g:node_host_prog = expand('~/.npm/bin/neovim-node-host')
+let g:fzf_preview_floating_window_rate = 1
+
+let g:fzf_layout = { 'down': '~30%' }
+let g:neuron_dir = expand('~/zettelkasten/')

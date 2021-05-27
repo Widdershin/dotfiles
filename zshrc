@@ -82,13 +82,21 @@ function db() {
     "$@"
 }
 
+function tcpf () { lsof -i TCP:$1 }
+
+function keep() {
+  local res=$(which $*)
+  echo $res >> ~/dotfiles/functions.sh
+}
+
+source ~/dotfiles/functions.sh
+
 alias vis="tmux split-window -hc "#{pane_current_path}" nvim"
 
 alias production="AWS_DEFAULT_PROFILE=prod"
 alias operator="AWS_DEFAULT_PROFILE=operator"
 alias c="rails c"
 alias e="nvim"
-alias nvim="nvim"
 alias vi="nvim"
 alias be="bundle exec"
 alias bi="bundle install"

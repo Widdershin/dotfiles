@@ -1,75 +1,86 @@
 self: super:
 
 let
-  update-prefetch-src = self.fetchFromGitHub {
-    owner = "justinwoo";
-    repo = "update-prefetch";
-    rev = "80b8f6eaa0108a1666d0e8bd8dc81ba810ce5f77";
-    sha256 = "04sgd37rh5zvx01c3cqf1p2c2alaqzd4r160wspnw6y1avwi1apz";
-  };
-  latestPkgs =
+  pinned =
     import (builtins.fetchTarball {
       # Descriptive name to make the store path easier to identify
       name = "nixos-unstable-2019-10-10";
       # Commit hash for nixos-unstable as of 2018-01-06
-      url = https://github.com/nixos/nixpkgs/archive/1f5fa9a8298ec7411431da981b4f1a79e10f2a8e.tar.gz;
+      url = https://github.com/nixos/nixpkgs/archive/cfed29bfcb28259376713005d176a6f82951014a.tar.gz;
       # Hash obtained using `nix-prefetch-url --unpack <url>`
-      sha256 = "1696ymp66ndbb0b49sbqi2g3y49k041hv6gd0i6kgfrvi1kqkidm";
+      sha256 = "034m892hxygminkj326y7l3bp4xhx0v154jcmla7wdfqd23dk5xm";
     }) {};
+  pinned2021 =
+    import (builtins.fetchTarball {
+      # Descriptive name to make the store path easier to identify
+      name = "nixos-unstable-2021-02-10";
+      # Commit hash for nixos-unstable as of 2018-01-06
+      url = https://github.com/nixos/nixpkgs/archive/ead24f04b06a5d5cb224b1cb5be6ae59c58c6915.tar.gz;
+      # Hash obtained using `nix-prefetch-url --unpack <url>`
+      sha256 = "06ad1688wg8s6pfw7z5icl4mmynh9ldi6j0b5c08h32br8fpawjy";
+    }) {};
+
+  latest = self;
+  neuron =
+    (let neuronRev = "99154121591ad419569fd6d506e84cf52641b057";
+         neuronSrc = builtins.fetchTarball "https://github.com/srid/neuron/archive/${neuronRev}.tar.gz";
+         in import neuronSrc {});
 in
 {
   userPackages              = super.userPackages or {} // {
-    self.config.allowUnfree = true;
+    self.config.allowUnfree            = true;
     self.config.allowUnsupportedSystem = true;
 
     # core
-    cacert                  = self.cacert;
-    nix                     = self.nix;
+    cacert                     = pinned.cacert;
+    nix                        = pinned.nix;
 
     # terminal
-    ag                      = self.ag;
-    bat                     = self.bat;
-    ctags                   = self.ctags;
-    fzf                     = self.fzf;
-    git                     = self.git;
-    httpie                  = self.httpie;
-    jq                      = self.jq;
-    neovim                  = latestPkgs.neovim;
-    pstree                  = self.pstree;
-    tig                     = self.tig;
-    tmux                    = self.tmux;
-    tree                    = self.tree;
-    watch                   = self.watch;
-    wget                    = self.wget;
-    zsh                     = self.zsh;
-    ncdu                    = self.ncdu;
-    reattach-to-user-namespace = self.reattach-to-user-namespace;
-siege = self.siege;
-    mosh = self.mosh;
-htop = self.htop;
+    ag                         = pinned.ag;
+    bat                        = pinned.bat;
+    ctags                      = pinned.ctags;
+    fzf                        = pinned.fzf;
+    git                        = pinned.git;
+    httpie                     = pinned.httpie;
+    jq                         = pinned.jq;
+    pstree                     = pinned.pstree;
+    tig                        = pinned.tig;
+    tmux                       = pinned.tmux;
+    tree                       = pinned.tree;
+    watch                      = pinned.watch;
+    wget                       = pinned.wget;
+    zsh                        = pinned.zsh;
+    ncdu                       = pinned.ncdu;
+    socat                      = pinned.socat;
+    reattach-to-user-namespace = pinned.reattach-to-user-namespace;
+    siege                      = pinned.siege;
+    mosh                       = pinned.mosh;
+    htop                       = pinned.htop;
+
     # programming languages
-    node                    = self.nodejs-10_x;
-    shellcheck              = self.shellcheck;
+    node                       = pinned.nodejs-12_x;
+    yarn                       = pinned.yarn;
+    shellcheck                 = pinned.shellcheck;
+    fsharp                     = pinned.fsharp;
 
     # web development
-    chromedriver            = self.chromedriver;
-    geckodriver             = self.geckodriver;
+    chromedriver               = pinned.chromedriver;
+    geckodriver                = pinned.geckodriver;
 
     # devops
-    terraform               = self.terraform;
-    aws                     = self.awscli;
-    python                 = self.python27;
-    nixops                  = self.nixopsUnstable;
-    heroku                  = self.heroku;
+    terraform                  = pinned2021.terraform_0_14;
+    aws                        = pinned.awscli;
+    python                     = pinned2021.python37.withPackages (p: with p; [
+      pinned2021.python37Packages.pynvim
+    ]);
+    nixops                     = pinned.nixopsUnstable;
+    heroku                     = pinned.heroku;
 
     # nix tooling
-    prefetch-github         = self.nix-prefetch-github;
-    update-prefetch = import "${update-prefetch-src}/default.nix" {};
+    prefetch-github            = pinned.nix-prefetch-github;
+    neuron                     = neuron;
 
-    # haskell tools
-    hoogle                  = self.haskellPackages.hoogle;
-
-    nix-rebuild             = super.writeScriptBin "nix-rebuild" ''
+    nix-rebuild = super.writeScriptBin "nix-rebuild" ''
       #!${super.stdenv.shell}
       if ! command -v nix-env &>/dev/null; then
           echo "warning: nix-env was not found in PATH, add nix to userPackages" >&2
@@ -77,6 +88,5 @@ htop = self.htop;
       fi
       exec nix-env -f '<nixpkgs>' -r -iA userPackages "$@"
     '';
-
   };
 }
