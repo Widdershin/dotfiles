@@ -1,0 +1,61 @@
+
+#main-window[tabsintitlebar="true"]:not([extradragspace="true"]) #TabsToolbar > .toolbar-items {
+  opacity: 0;
+  pointer-events: none;
+}
+#main-window:not([tabsintitlebar="true"]) #TabsToolbar {
+    visibility: collapse !important;
+}
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
+  display: none;
+}
+#sidebar {
+  min-width: 100px !important;
+}
+.contextual-identity-marker {
+  position: absolute !important;
+  pointer-events: none;Full Auto-show/hide Theme
+  z-index: 0;
+
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+
+  width: unset !important;
+  height: unset !important;
+
+  opacity: 0.5;
+}
+
+/* collapse tabs/window button bar */
+
+:root {
+  --drag-space: 5px;
+}
+
+#TabsToolbar {
+  background: rgba(43, 42, 51, 1);
+  min-height: var(--drag-space) !important;
+  height: var(--drag-space) !important;
+}
+
+/* move window buttons down to align with navbar */
+
+hbox.titlebar-buttonbox-container:nth-child(4) {
+  margin-top: calc(1em + var(--drag-space) - 2px);
+}
+
+/* make space on the navbar for window items */
+
+#nav-bar {
+  padding-left: 6em;
+  padding-bottom: var(--drag-space);
+}
+
+/* center urlbar */
+
+#urlbar {
+ --urlbar-height: 32px !important;
+ --urlbar-toolbar-height: 37.00px !important;
+}
