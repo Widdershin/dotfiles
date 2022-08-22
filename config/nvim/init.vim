@@ -1,84 +1,19 @@
 " -- Plugins --
 call plug#begin('~/.nvim/plugged')
 
-" Editing
-Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-repeat'
-Plug 'Shougo/vimproc.vim'
-Plug 'FooSoft/vim-argwrap'
-Plug 'osyo-manga/vim-over'
-Plug 'junegunn/vim-easy-align'
-Plug 'chrisbra/NrrwRgn'
-Plug 'sjl/gundo.vim'
-Plug 'BurntSushi/ripgrep'
-Plug 'fiatjaf/neuron.vim'
-
-" Completion
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 if has('win32') || has('win64')
   Plug 'tbodt/deoplete-tabnine', { 'do': 'powershell.exe .\install.ps1' }
 else
   Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
 endif
 
-" Navigation
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
-Plug 'junegunn/fzf.vim'
-Plug 'scrooloose/nerdtree'
-
-" Linting
-Plug 'dense-analysis/ale'
-
-" UI
-Plug 'bling/vim-airline'
-Plug 'ap/vim-css-color'
-Plug 'ntpeters/vim-better-whitespace'
-Plug 'roman/golden-ratio'
-" Plug 'jszakmeister/vim-togglecursor'
-Plug 'tpope/vim-dispatch'
-Plug 'junegunn/vim-peekaboo'
-
-" Theme
-Plug 'nanotech/jellybeans.vim'
-
-" Git
-Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
-
-" Tmux
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'jgdavey/tslime.vim'
-Plug 'tmux-plugins/vim-tmux-focus-events'
-Plug 'sjl/vitality.vim'
-
-" Ruby
-Plug 'tpope/vim-rails'
-Plug 'vim-ruby/vim-ruby'
-Plug 'thoughtbot/vim-rspec'
-Plug 'ecomba/vim-ruby-refactoring'
-Plug 'osyo-manga/vim-monster'
-Plug 'jgdavey/vim-blockle'
-Plug 'dermusikman/sonicpi.vim'
-
-" Elm
-Plug 'ElmCast/elm-vim'
-
-" Typescript
-Plug 'leafgarland/typescript-vim'
-
-" Rust
-Plug 'rust-lang/rust.vim'
-
-" Nix
-Plug 'LnL7/vim-nix'
+Plug 'FooSoft/vim-argwrap'
 
 call plug#end()
 
+" -- Plugins --
 " Set the theme
 colorscheme jellybeans
-
 
 " -- Options --
 
@@ -214,6 +149,8 @@ nmap <leader>x :q<CR>
 
 vmap <leader>s :sort<CR>
 
+nmap <CR> :lnext<CR>
+nmap <leader>N :lprev<CR>
 " FZF
 noremap <c-p> :Files<CR>
 let $FZF_DEFAULT_COMMAND = 'ag --ignore ".git/*" --hidden -l -g ""'
@@ -243,8 +180,8 @@ nnoremap <leader>} :ALENextWrap<CR>
 noremap <leader>n :NERDTreeFind<CR>
 
 " Quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :e $MYVIMRC<CR>
-nmap <silent> <leader>sv :so $MYVIMRC<CR>
+nmap <silent> <leader>ev :e ~/.config/nvim/init.vim<CR>
+nmap <silent> <leader>sv :so ~/.config/nvim/init.vim<CR>
 
 " Restore the enter key in the quick fix panel
 autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>

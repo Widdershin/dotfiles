@@ -1,17 +1,8 @@
-source ~/antigen/antigen.zsh
+fpath+=/opt/homebrew/share/zsh/site-functions
 
-antigen bundle chrissicool/zsh-256color
-antigen bundle zsh-users/zsh-completions src
-antigen bundle zsh-users/zsh-syntax-highlighting
-
-antigen bundle mafredri/zsh-async
-antigen bundle sindresorhus/pure
-
-# Tell antigen that you're done.
-antigen apply
-
-# Nicer diff highlighting
-# ln -sf "$(brew --prefix)/share/git-core/contrib/diff-highlight/diff-highlight" ~/bin/diff-highlight
+autoload -Uz promptinit
+promptinit
+prompt pure
 
 # command correction
 setopt correct
@@ -69,7 +60,15 @@ function clone {
   tmux switch-client -t "$(TMUX= tmux -S "${TMUX%,*,*}" new-session -dP -s $repo_name "git clone $* $dir; cd $dir; zsh")"
 }
 
-function using() { nix-shell -p $1 --run zsh }
+function using() {
+  NIX_PACKAGES="$NIX_PACKAGES $1" nix-shell -p $1 --run zsh
+}
+usingx () {
+  NIX_PACKAGES="$NIX_PACKAGES $1(x86)" nix-shell --option system x86_64-darwin -p $1 --run zsh
+}
+using-x86 () {
+	usingx $1
+}
 function run() { tmux split-window -l 10 -bc "#{pane_current_path}" "$*; read"; tmux select-pane -D }
 
 function db() {
@@ -160,6 +159,8 @@ bindkey -e
 export FZF_DEFAULT_COMMAND='ag -l -g ""'
 
 export PGDATA='/usr/local/var/postgres'
+export NPM_CONFIG_PREFIX="$HOME/.node/"
+export GEM_PATH=$HOME/.gem
 
 dosh ()
 {
@@ -173,9 +174,12 @@ dosha ()
   docker attach $container
 }
 
-eval "$(rbenv init -)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+# eval "$(frum init)"
 
-source /Users/nick/Library/Preferences/org.dystroy.broot/launcher/bash/br
 
 # added by travis gem
 [ -f /Users/nick/.travis/travis.sh ] && source /Users/nick/.travis/travis.sh
+export name=$NIX_PACKAGES
+
+eval "$(direnv hook zsh)"
