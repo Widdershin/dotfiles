@@ -1,9 +1,6 @@
 { config, pkgs, ... }:
 
 let
-  pkgsM1 = import <nixpkgs-darwin> { localSystem = "aarch64-darwin"; };
-  pkgsX86 = import <nixpkgs-darwin> { localSystem = "x86_64-darwin"; };
-
   loadPlugin = p: ''
     set rtp^=${p.outPath}
     set rtp+=${p.outPath}/after
@@ -17,7 +14,7 @@ let
     so ~/dotfiles/config/nvim/init.vim
   '';
 
-  neovimPackages = with pkgsM1.vimPlugins; [
+  neovimPackages = with pkgs.vimPlugins; [
     vim-sensible
     vim-surround
     vim-endwise
@@ -117,11 +114,11 @@ in
       #docker
       tabnine
       tmux
-      pkgsM1.kitty
+      kitty
       sqlite
       libjpeg
       nix-direnv-flakes
-      pkgsM1.tailscale
+      tailscale
       terraform
 
       # used by telescope
@@ -130,9 +127,10 @@ in
 
   # Auto upgrade nix package and the daemon service.
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.hostPlatform = "aarch64-darwin";
   services.nix-daemon.enable = true;
   services.tailscale.enable = true;
-  services.tailscale.package = pkgsM1.tailscale;
+  services.tailscale.package = pkgs.tailscale;
 
   nix.extraOptions = ''
     experimental-features = flakes nix-command
@@ -141,7 +139,7 @@ in
   nix.settings.trusted-users = ["nick" "root"];
 
   # Create /etc/bashrc that loads the nix-darwin environment.
-  programs.vim.package = pkgsM1.neovim.override {
+  programs.vim.package = pkgs.neovim.override {
       configure = {
         packages.darwin.start = neovimPackages;
         customRC = plugins;
