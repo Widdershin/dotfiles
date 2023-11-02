@@ -11,15 +11,23 @@
     {
       darwinConfigurations."Nicks-MacBook-Pro" = nix-darwin.lib.darwinSystem {
         modules = [
+          # core system config
           ./nix/nix-settings.nix
           ./nix/darwin-settings.nix
           ./nix/shell-configuration.nix
-          ./nix/tailscale.nix
+          ./nix/fonts.nix
+
+          # packages
           ./nix/system-packages.nix
           ./nix/homebrew.nix
           ./nix/neovim.nix
-          ./nix/fonts.nix
+
+          # services
+          ./nix/tmux.nix
+          ./nix/tailscale.nix
         ];
+
+        specialArgs = { inherit inputs; };
       };
     };
 }

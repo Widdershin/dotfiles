@@ -32,7 +32,6 @@
       heroku
       nix-prefetch-github
       tabnine
-      tmux
       kitty
       sqlite
       libjpeg

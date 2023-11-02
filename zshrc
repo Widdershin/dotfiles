@@ -183,6 +183,7 @@ export LOCAL_IP=$(ipconfig getifaddr en0)
 export HOSTNAME=$LOCAL_IP:3000
 
 export NIX_IGNORE_SYMLINK_STORE=1
+
 if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
