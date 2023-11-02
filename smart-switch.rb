@@ -50,7 +50,7 @@ tmux_sessions = `tmux list-sessions | cut -d: -f1`.split("\n")
 
 options = Set.new(tmux_sessions + project_directories + ["dotfiles"])
 
-project = `echo "#{options.to_a.join("\n")}" | fzf --preview 'tmux list-windows -t {} && tmux capture-pane -ep -t {}' --preview-window=70%`.chomp
+project = `echo "#{options.to_a.join("\n")}" | fzf --preview 'tmux list-windows -t {} && tmux capture-pane -ep -t {} || ls -la ~/Projects/{}' --preview-window=70%`.chomp
 
 exit unless $? == 0
 

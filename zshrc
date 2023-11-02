@@ -132,10 +132,12 @@ if [[ "$TERM" != "screen-256color" ]] &&
         tmux -2 new-session -s $WHOAMI
     fi
 else
-
     # One might want to do other things in this case,
     # here I print my motd, but only on servers where
     # one exists
+    if [[ "$PWD" == "$HOME" ]]; then
+      ~/smart-switch.rb
+    fi
 
     # If inside tmux session then print MOTD
     MOTD=/etc/motd.tcl
