@@ -1,12 +1,12 @@
 { config, pkgs, ... }:
 
 let
-  pkgsM1 = import <unstable> { localSystem = "aarch64-darwin"; };
-  pkgsX86 = import <unstable> { localSystem = "x86_64-darwin"; };
+  pkgsM1 = import <nixpkgs-darwin> { localSystem = "aarch64-darwin"; };
+  pkgsX86 = import <nixpkgs-darwin> { localSystem = "x86_64-darwin"; };
 
   loadPlugin = p: ''
-    set rtp^=${p.rtp}
-    set rtp+=${p.rtp}/after
+    set rtp^=${p.outPath}
+    set rtp+=${p.outPath}/after
   '';
 
   plugins = ''
@@ -14,38 +14,28 @@ let
     filetype off | syn off
     ${pkgs.lib.concatStrings (map loadPlugin neovimPackages)}
     filetype indent plugin on | syn on
+    so ~/dotfiles/config/nvim/init.vim
   '';
 
-  neovimPackages = with pkgs.vimPlugins; [
+  neovimPackages = with pkgsM1.vimPlugins; [
     vim-sensible
     vim-surround
     vim-endwise
     vim-abolish
     vim-repeat
-    polyglot
-    vim-easy-align
-    NrrwRgn
     gundo-vim
-    neuron-vim
     vim-plug
-    fzfWrapper
-    fzf-vim
     nerdtree
-    vim-airline
     vim-css-color
     vim-better-whitespace
-    golden-ratio
-    vim-dispatch
     vim-peekaboo
-    jellybeans-vim
     vim-fugitive
-    vim-gitgutter
     vim-tmux-navigator
     tslime-vim
     vim-tmux-focus-events
     vimproc-vim
-    deoplete-nvim
     Improved-AnsiEsc
+    telescope-fzf-native-nvim
     #	vitality-vim
   ];
 in
@@ -69,7 +59,7 @@ in
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToControl = true;
 
-  fonts.enableFontDir = true;
+  fonts.fontDir.enable = true;
   fonts.fonts = [ pkgs.hack-font ];
 
   homebrew.enable = true;
@@ -83,16 +73,10 @@ in
   ];
 
   homebrew.masApps = {
-    Amphetamine = 937984704;
+    #Amphetamine = 937984704;
   };
 
   homebrew.extraConfig = ''
-    tap "mongodb/brew"
-    brew "mysql@5.6", restart_service: true, link: true, conflicts_with: ["mysql"]
-    brew "memcached", restart_service: true, link: true
-    brew "mongodb/brew/mongodb-community", restart_service: true, link: true
-    tap "elastic/tap"
-    brew "elastic/tap/elasticsearch-full", restart_service: true, link: true
     brew "postgresql@12", restart_service: true, link: true
     brew "redis", restart_service: true, link: true
   '';
@@ -102,7 +86,7 @@ in
   environment.systemPackages =
     with pkgs;
     [ config.programs.vim.package
-      ag
+      silver-searcher
       bat
       ctags
       fzf
@@ -117,40 +101,50 @@ in
       ncdu
       socat
       reattach-to-user-namespace
-      siege
+      wrk
       htop
-      pkgsX86.nodejs-14_x
-      ruby
+      nodejs-18_x
+      aws-vault
+      python3
       direnv
       yarn
       shellcheck
       # chromedriver
       geckodriver
-      terraform_0_14
       awscli
       heroku
       nix-prefetch-github
-      docker
+      #docker
       tabnine
       tmux
+      pkgsM1.kitty
+      sqlite
+      libjpeg
+      nix-direnv-flakes
+      pkgsM1.tailscale
+      terraform
+
+      # used by telescope
+      ripgrep
     ];
 
   # Auto upgrade nix package and the daemon service.
   nixpkgs.config.allowUnfree = true;
   services.nix-daemon.enable = true;
-  nix.package = pkgs.nix;
+  services.tailscale.enable = true;
+  services.tailscale.package = pkgsM1.tailscale;
+
   nix.extraOptions = ''
-    experimental-features = nix-commmand flakes
+    experimental-features = flakes nix-command
     extra-platforms = x86_64-darwin aarch64-darwin
   '';
-  nix.trustedUsers = ["nick" "root"];
+  nix.settings.trusted-users = ["nick" "root"];
 
   # Create /etc/bashrc that loads the nix-darwin environment.
-  programs.vim.package = pkgs.neovim.override {
+  programs.vim.package = pkgsM1.neovim.override {
       configure = {
-        packages.darwin.start = neovimPackages
-          ++ (with pkgs.vimPlugins; [ ale ]);
-        customRC = plugins + builtins.readFile ~/dotfiles/config/nvim/init.vim;
+        packages.darwin.start = neovimPackages;
+        customRC = plugins;
     };
   };
 

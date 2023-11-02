@@ -37,7 +37,8 @@
 #TabsToolbar {
   background: rgba(43, 42, 51, 1);
   min-height: var(--drag-space) !important;
-  height: var(--drag-space) !important;
+  height: 0px !important;
+  max-height: 0px !important;
 }
 
 /* move window buttons down to align with navbar */
@@ -58,4 +59,8 @@ hbox.titlebar-buttonbox-container:nth-child(4) {
 #urlbar {
  --urlbar-height: 32px !important;
  --urlbar-toolbar-height: 37.00px !important;
+}
+
+hbox.titlebar-buttonbox.titlebar-color {
+  margin-top: 45px !important;
 }

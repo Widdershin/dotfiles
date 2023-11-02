@@ -20,6 +20,7 @@ export GOPATH=$HOME
 export PATH="$PATH:$GOPATH/bin"
 
 export PATH="$PATH:$HOME/.cabal/bin"
+export PATH="$PATH:$HOME/.docker/bin"
 
 # History
 HISTSIZE=5000000        # How many lines of history to keep in memory
@@ -125,8 +126,6 @@ alias sv="source ~/.zshrc"
 export EDITOR='nvim'
 stty -ixon
 
-export NIX_IGNORE_SYMLINK_STORE=1
-if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
 if [[ "$TERM" != "screen-256color" ]] &&
     ; then
@@ -174,12 +173,24 @@ dosha ()
   docker attach $container
 }
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
-# eval "$(frum init)"
-
 
 # added by travis gem
 [ -f /Users/nick/.travis/travis.sh ] && source /Users/nick/.travis/travis.sh
 export name=$NIX_PACKAGES
 
+# storypark
+export LOCAL_IP=$(ipconfig getifaddr en0)
+export HOSTNAME=$LOCAL_IP:3000
+
+export NIX_IGNORE_SYMLINK_STORE=1
+if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+# eval "$(frum init)"
+
 eval "$(direnv hook zsh)"
+
+stty icrnl
+bindkey "\e[1;3C" emacs-forward-word
+bindkey "\e[1;3D" emacs-backward-word
+export DIRENV_LOG_FORMAT=""

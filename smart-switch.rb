@@ -24,6 +24,10 @@ end
 def start_session(project)
   project_path = File.join(PROJECTS_DIR, project)
 
+  if project === "dotfiles"
+    project_path = "/Users/nick/dotfiles"
+  end
+
   if tmux_is_running?
     `tmux switch-client -t "$(TMUX= tmux -S "${TMUX%,*,*}" new-session -dP -s "#{project}" -c #{project_path})"`
   else
@@ -37,7 +41,7 @@ end
 
 tmux_sessions = `tmux list-sessions | cut -d: -f1`.split("\n")
 
-options = Set.new(tmux_sessions + project_directories)
+options = Set.new(tmux_sessions + project_directories + ["dotfiles"])
 
 project = `echo "#{options.to_a.join("\n")}" | fzf`.chomp
 
