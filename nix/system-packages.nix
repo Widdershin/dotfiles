@@ -3,7 +3,7 @@
 {
   environment.systemPackages =
     with pkgs;
-    [ config.programs.vim.package 
+    [ config.programs.vim.package
       silver-searcher
       bat
       ctags
@@ -27,12 +27,10 @@
       direnv
       yarn
       shellcheck
-      # chromedriver
       geckodriver
       awscli
       heroku
       nix-prefetch-github
-      #docker
       tabnine
       tmux
       kitty

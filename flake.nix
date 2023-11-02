@@ -1,5 +1,5 @@
 {
-  description = "Nick's darwin system";
+  description = "Nick's macOS config";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-23.05-darwin";
@@ -8,33 +8,17 @@
   };
 
   outputs = inputs@{ self, nix-darwin, nixpkgs }:
-    let
-      configuration = { pkgs, ... }: {
-        # Auto upgrade nix package and the daemon service.
-        services.nix-daemon.enable = true;
-
-        # Enable flake and nix commmand support, and x86 platform support
-        nix.extraOptions = ''
-          experimental-features = flakes nix-command
-          extra-platforms = x86_64-darwin aarch64-darwin
-        '';
-
-        nix.settings.trusted-users = ["nick" "root"];
-
-        nixpkgs.config.allowUnfree = true;
-        nixpkgs.config.allowAliases = true;
-        nixpkgs.hostPlatform = "aarch64-darwin";
-      };
-    in
     {
       darwinConfigurations."Nicks-MacBook-Pro" = nix-darwin.lib.darwinSystem {
         modules = [
-          configuration
+          ./nix/nix-settings.nix
           ./nix/darwin-settings.nix
-          ./darwin-configuration.nix
-          ./nix/homebrew.nix
+          ./nix/shell-configuration.nix
+          ./nix/tailscale.nix
           ./nix/system-packages.nix
+          ./nix/homebrew.nix
           ./nix/neovim.nix
+          ./nix/fonts.nix
         ];
       };
     };

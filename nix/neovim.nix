@@ -42,6 +42,4 @@ in
         customRC = plugins;
     };
   };
-
-  #environment.systemPackages = config.environment.systemPackages + [ config.programs.vim.package ] ;
 }
