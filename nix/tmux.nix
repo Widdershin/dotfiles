@@ -1,6 +1,8 @@
 { pkgs, ... }:
 
 {
+  environment.systemPackages = [pkgs.reattach-to-user-namespace]; # TODO - do I still need this?
+
   programs.tmux.enable = true;
   programs.tmux.enableFzf = true;
   programs.tmux.enableMouse = true;
@@ -8,7 +10,6 @@
   programs.tmux.enableVim = true;
 
   programs.tmux.defaultCommand = "zsh";
-
   programs.tmux.extraConfig = ''
     set -g default-terminal "screen-256color"
     set-option -sa terminal-overrides ',xterm-256color:RGB'
@@ -55,13 +56,8 @@
     bind-key v split-window -hc "#{pane_current_path}" nvim
     bind-key t split-window -l 10 "nvim ~/TODO"
 
-    set -g @catppuccin_flavour 'latte'
     set -g @catppuccin_flavour 'frappe'
-    set -g @catppuccin_flavour 'machiatto'
 
     run-shell ${pkgs.tmuxPlugins.catppuccin.rtp}
-
-    # Theme
-    # source-file ~/.tmux.theme
   '';
 }

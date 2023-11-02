@@ -3,46 +3,72 @@
 {
   environment.systemPackages =
     with pkgs;
-    [ config.programs.vim.package
-      silver-searcher
-      bat
+    [ # terminal
+      zsh
+      kitty
+      pure-prompt
+
+      # neovim and friends
+      config.programs.vim.package
       ctags
       fzf
+
+      # git and co
       git
-      httpie
-      jq
-      pstree
       tig
+
+      # searching
+      silver-searcher
+      ripgrep # used by telescope.nvim
+
+      # filesystem management
+      bat
+      jq
+      tree
+
+      # watchers
       watch
+
+      # webdev
+      httpie
       wget
-      zsh
-      ncdu
-      socat
-      reattach-to-user-namespace
       wrk
-      htop
-      nodejs-18_x
-      aws-vault
-      python3
-      direnv
-      yarn
-      shellcheck
       geckodriver
+      yarn
+
+      # system info
+      htop
+      ncdu
+      pstree
+
+      # networking utils
+      socat
+
+      # programming languages
+      nodejs-18_x
+      python3
+
+      # linters
+      shellcheck
+
+      # devops
+      aws-vault
       awscli
       heroku
-      nix-prefetch-github
-      tabnine
-      kitty
-      sqlite
-      libjpeg
-      nix-direnv-flakes
-      tailscale
       terraform
 
-      # used by telescope
-      ripgrep
+      # direnv and friends
+      direnv
+      nix-direnv-flakes
 
+      # nix utils
+      nix-prefetch-github
       cachix
-      pure-prompt
+
+      # database clients
+      sqlite
+
+      # common dev libs
+      libjpeg
     ];
 }

@@ -1,21 +1,14 @@
-fpath+=/opt/homebrew/share/zsh/site-functions
-
-autoload -Uz promptinit
-promptinit
+autoload -Uz promptinit compinit && promptinit && compinit
 prompt pure
+
 zstyle :prompt:pure:git:stash show yes
 
 # command correction
 setopt correct
 
-export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
-export PATH="$PATH:/usr/lib/postgresql/9.1/bin";
 export PROJECT_HOME=$HOME/Projects
-
-### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
 
 export GOPATH=$HOME
 export PATH="$PATH:$GOPATH/bin"
@@ -63,11 +56,11 @@ function clone {
 }
 
 function using() {
-   IN_NIX_SHELL=true NIXPKGS_ALLOW_UNFREE=1 NIX_PACKAGES="$NIX_PACKAGES $1" nix shell "nixpkgs#$1"
+   NIXPKGS_ALLOW_UNFREE=1 NIX_PACKAGES="$NIX_PACKAGES $1" nix-shell -p "$1" --run zsh
 }
 
 function using-x86 () {
-   IN_NIX_SHELL=true NIXPKGS_ALLOW_UNFREE=1 NIX_PACKAGES="$NIX_PACKAGES $1(x86)" nix shell --option system x86_64-darwin "nixpkgs#$1"
+   NIXPKGS_ALLOW_UNFREE=1 NIX_PACKAGES="$NIX_PACKAGES $1(x86)" nix-shell --option system x86_64-darwin -p "$1" --run zsh
 }
 
 function run() { tmux split-window -l 10 -bc "#{pane_current_path}" "$*; read"; tmux select-pane -D }
@@ -151,8 +144,6 @@ else
     fi
 fi
 
-export PATH="/usr/local/sbin:$PATH"
-
 bindkey -e
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='ag -l -g ""'
@@ -174,8 +165,7 @@ dosha ()
 }
 
 
-# added by travis gem
-[ -f /Users/nick/.travis/travis.sh ] && source /Users/nick/.travis/travis.sh
+# used for showing used nix packages in pure prompt
 export name=$NIX_PACKAGES
 
 # storypark
