@@ -25,3 +25,6 @@ sp () {
 nix-search () {
 	nix search --extra-experimental-features nix-command nixpkgs $*
 }
+ns () {
+	nix-search $*
+}

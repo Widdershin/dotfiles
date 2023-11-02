@@ -3,6 +3,7 @@ fpath+=/opt/homebrew/share/zsh/site-functions
 autoload -Uz promptinit
 promptinit
 prompt pure
+zstyle :prompt:pure:git:stash show yes
 
 # command correction
 setopt correct
@@ -62,14 +63,13 @@ function clone {
 }
 
 function using() {
-  NIX_PACKAGES="$NIX_PACKAGES $1" nix-shell -p $1 --run zsh
+   IN_NIX_SHELL=true NIXPKGS_ALLOW_UNFREE=1 NIX_PACKAGES="$NIX_PACKAGES $1" nix shell "nixpkgs#$1"
 }
-usingx () {
-  NIX_PACKAGES="$NIX_PACKAGES $1(x86)" nix-shell --option system x86_64-darwin -p $1 --run zsh
+
+function using-x86 () {
+   IN_NIX_SHELL=true NIXPKGS_ALLOW_UNFREE=1 NIX_PACKAGES="$NIX_PACKAGES $1(x86)" nix shell --option system x86_64-darwin "nixpkgs#$1"
 }
-using-x86 () {
-	usingx $1
-}
+
 function run() { tmux split-window -l 10 -bc "#{pane_current_path}" "$*; read"; tmux select-pane -D }
 
 function db() {
@@ -186,8 +186,6 @@ export NIX_IGNORE_SYMLINK_STORE=1
 if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
-# eval "$(frum init)"
-
 eval "$(direnv hook zsh)"
 
 stty icrnl
