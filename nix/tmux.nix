@@ -52,13 +52,20 @@
 
     bind-key o resize-pane -Z
     unbind s
-    bind-key n split-window "nvim -c 'normal Go' -c 'r!date' -c 'normal o' -c 'normal o' -c 'startinsert' ~/notes.txt"
-    bind-key s split-window "~/smart-switch.rb"
+    bind-key n display-popup "nvim -c 'normal Go' -c 'r!date' -c 'normal o' -c 'normal o' -c 'startinsert' ~/notes.txt"
+    bind-key s display-popup -w 80% -h 80% -EE -T "Select Project" "~/smart-switch.rb"
     bind-key v split-window -hc "#{pane_current_path}" nvim
-    bind-key t split-window -l 10 "nvim ~/TODO"
+    bind-key t display-popup -w 80% -h 80% -E "nvim ~/TODO"
 
-    set -g @catppuccin_flavour 'frappe'
+    set -g @catppuccin_flavour 'mocha'
 
     run-shell ${pkgs.tmuxPlugins.catppuccin.rtp}
+
+    set -g popup-border-lines rounded
+    set -g popup-border-style "fg=#89b4fa bg=#1E1E2D"
+    set -g pane-active-border-style "fg=#89b4fa bg=#1E1E2D"
+    set -g pane-border-style "fg=#89b4fa bg=#1E1E2D"
+    set -g pane-border-status bottom
+    set -g pane-border-format ""
   '';
 }
