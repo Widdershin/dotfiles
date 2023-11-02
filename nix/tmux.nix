@@ -1,7 +1,8 @@
 { pkgs, ... }:
 
 {
-  environment.systemPackages = [pkgs.reattach-to-user-namespace]; # TODO - do I still need this?
+  environment.systemPackages = [pkgs.reattach-to-user-namespace];
+  environment.etc."pam_reattach".source = pkgs.pam-reattach.outPath;
 
   programs.tmux.enable = true;
   programs.tmux.enableFzf = true;
