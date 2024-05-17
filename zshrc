@@ -1,25 +1,16 @@
-fpath+=/opt/homebrew/share/zsh/site-functions
+autoload -Uz compinit && compinit
 
-autoload -Uz promptinit
-promptinit
-prompt pure
+zstyle :prompt:pure:git:stash show yes
 
 # command correction
 setopt correct
 
-export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
-export PATH="$PATH:/usr/lib/postgresql/9.1/bin";
 export PROJECT_HOME=$HOME/Projects
 
-### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
-
-export GOPATH=$HOME
-export PATH="$PATH:$GOPATH/bin"
-
 export PATH="$PATH:$HOME/.cabal/bin"
+export PATH="$PATH:$HOME/.docker/bin"
 
 # History
 HISTSIZE=5000000        # How many lines of history to keep in memory
@@ -61,14 +52,18 @@ function clone {
 }
 
 function using() {
-  NIX_PACKAGES="$NIX_PACKAGES $1" nix-shell -p $1 --run zsh
+  local pkg_names=$(echo $(printf '%s\n' "${@}" | xargs -I'{}' echo "nixpkgs#{}"))
+
+  __ETC_ZSHRC_SOURCED= NIXPKGS_ALLOW_UNFREE=1 NIX_PACKAGES="$NIX_PACKAGES $*" nix shell $pkg_names --command zsh
 }
-usingx () {
-  NIX_PACKAGES="$NIX_PACKAGES $1(x86)" nix-shell --option system x86_64-darwin -p $1 --run zsh
+
+function using-x86 () {
+  local pkg_names=$(echo $(printf '%s\n' "${@}" | xargs -I'{}' echo "nixpkgs#{}"))
+  local prompt_pkg_names=$(echo $(printf '%s\n' "${@}" | xargs -I'{}' echo "{} (x86)"))
+
+  __ETC_ZSHRC_SOURCED= NIXPKGS_ALLOW_UNFREE=1 NIX_PACKAGES="$NIX_PACKAGES $prompt_pkg_names" nix shell $pkg_names --option platform x86_64-darwin --command zsh
 }
-using-x86 () {
-	usingx $1
-}
+
 function run() { tmux split-window -l 10 -bc "#{pane_current_path}" "$*; read"; tmux select-pane -D }
 
 function db() {
@@ -125,8 +120,6 @@ alias sv="source ~/.zshrc"
 export EDITOR='nvim'
 stty -ixon
 
-export NIX_IGNORE_SYMLINK_STORE=1
-if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
 if [[ "$TERM" != "screen-256color" ]] &&
     ; then
@@ -140,10 +133,12 @@ if [[ "$TERM" != "screen-256color" ]] &&
         tmux -2 new-session -s $WHOAMI
     fi
 else
-
     # One might want to do other things in this case,
     # here I print my motd, but only on servers where
     # one exists
+    #if [[ "$PWD" == "$HOME" ]]; then
+    #  ~/smart-switch.rb
+    #fi
 
     # If inside tmux session then print MOTD
     MOTD=/etc/motd.tcl
@@ -151,8 +146,6 @@ else
         $MOTD
     fi
 fi
-
-export PATH="/usr/local/sbin:$PATH"
 
 bindkey -e
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -174,12 +167,23 @@ dosha ()
   docker attach $container
 }
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
-# eval "$(frum init)"
 
+# used for showing used nix packages in pure prompt
+export VIRTUAL_ENV=$NIX_PACKAGES
 
-# added by travis gem
-[ -f /Users/nick/.travis/travis.sh ] && source /Users/nick/.travis/travis.sh
-export name=$NIX_PACKAGES
+# storypark
+export LOCAL_IP=$(ipconfig getifaddr en0)
+export HOSTNAME=$LOCAL_IP:3000
 
+# turning this off since I don't remember why I need it
+# export NIX_IGNORE_SYMLINK_STORE=1
+
+if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+
+# eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(direnv hook zsh)"
+
+stty icrnl
+bindkey "\e[1;3C" emacs-forward-word
+bindkey "\e[1;3D" emacs-backward-word
+export DIRENV_LOG_FORMAT=""

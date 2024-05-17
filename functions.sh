@@ -19,3 +19,12 @@ tcpkill () {
 'using!' () {
 	NIX_PACKAGES="$NIX_PACKAGES $2" nix-shell -I nixpkgs=$1 -p $2 --run zsh
 }
+sp () {
+	RSPEC_RERUN=t bundle exec rspec $*
+}
+nix-search () {
+	nix search --extra-experimental-features nix-command nixpkgs $*
+}
+ns () {
+	nix-search $*
+}

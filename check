@@ -1,0 +1,2 @@
+#!/bin/bash
+ darwin-rebuild --flake . check
