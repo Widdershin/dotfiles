@@ -1,5 +1,18 @@
 { pkgs, ... }:
 
+let
+  lazygit-catppucin = pkgs.fetchFromGitHub {
+    owner = "catppuccin";
+    repo = "lazygit";
+    rev = "146a25ef722560fe74026c4dbd3186ef5faa5166";
+    sha256 = "sha256-mHB4Db71uKblCDab47eBIKd63ekYjvXOqUkY/ELMDQQ=";
+  };
+
+  lazygit = pkgs.writeScriptBin "lazygit" ''
+    #!${pkgs.runtimeShell}
+    ${pkgs.lazygit}/bin/lazygit --use-config-file "${lazygit-catppucin}/themes-mergable/mocha/yellow.yml" $@
+  '';
+in
 {
   environment.systemPackages = [pkgs.reattach-to-user-namespace];
   environment.etc."pam_reattach".source = pkgs.pam-reattach.outPath;
@@ -55,6 +68,7 @@
     unbind s
     bind-key n display-popup "nvim -c 'normal Go' -c 'r!date' -c 'normal o' -c 'normal o' -c 'startinsert' ~/notes.txt"
     bind-key s display-popup -w 80% -h 80% -EE -T "Select Project" "~/smart-switch.rb"
+    bind-key g display-popup -w 80% -h 80% -EE -T "Git" -d '#{pane_current_path}' "${lazygit}/bin/lazygit"
     bind-key v split-window -hc "#{pane_current_path}" nvim
     bind-key t display-popup -w 80% -h 80% -E "nvim ~/TODO"
 
