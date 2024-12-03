@@ -47,7 +47,6 @@
         ./nix/darwin-settings.nix
         ./nix/shell-configuration.nix
         ./nix/fonts.nix
-        ./nix/linux-builder.nix
 
         # packages
         ./nix/system-packages.nix
@@ -56,10 +55,11 @@
 
         # services
         ./nix/tmux.nix
-        ./nix/tailscale.nix
       ];
 
       specialArgs = { inherit inputs; };
     };
+
+    pkgs = nixpkgs.legacyPackages.aarch64-darwin;
   };
 }

@@ -13,6 +13,7 @@
     experimental-features = flakes nix-command repl-flake configurable-impure-env
     extra-platforms = x86_64-darwin aarch64-darwin
     warn-dirty = false
+    use-sqlite-wal = true
   '';
 
   nix.settings.trusted-users = ["nick" "root"];

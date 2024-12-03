@@ -7,7 +7,12 @@
   programs.zsh.enableFzfCompletion = true;
   programs.zsh.enableFzfGit = true;
   programs.zsh.enableFzfHistory = true;
-  programs.zsh.promptInit = "autoload -U promptinit && promptinit && prompt pure";
+  programs.zsh.interactiveShellInit = ''
+    # pure-prompt
+    . ${pkgs.pure-prompt}/share/zsh/site-functions/async
+    . ${pkgs.pure-prompt}/share/zsh/site-functions/prompt_pure_setup
+  '';
+  programs.zsh.promptInit = "";
 
   programs.zsh.variables.cfg = "$HOME/.config/nixpkgs/darwin/configuration.nix";
   programs.zsh.variables.darwin = "$HOME/.nix-defexpr/darwin";

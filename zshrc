@@ -54,7 +54,7 @@ function clone {
 function using() {
   local pkg_names=$(echo $(printf '%s\n' "${@}" | xargs -I'{}' echo "nixpkgs#{}"))
 
-  __ETC_ZSHRC_SOURCED= NIXPKGS_ALLOW_UNFREE=1 NIX_PACKAGES="$NIX_PACKAGES $*" nix shell $pkg_names --command zsh
+  __ETC_ZSHRC_SOURCED= NIXPKGS_ALLOW_UNFREE=1 NIX_PACKAGES="$NIX_PACKAGES $*" nix shell $pkg_names --inputs-from ~/dotfiles --command zsh
 }
 
 function using-x86 () {
@@ -121,8 +121,7 @@ export EDITOR='nvim'
 stty -ixon
 
 
-if [[ "$TERM" != "screen-256color" ]] &&
-    ; then
+if [[ -z "$TMUX_PANE" ]]; then
     # Attempt to discover a detached session and attach
     # it, else create a new session
 

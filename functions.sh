@@ -28,3 +28,11 @@ nix-search () {
 ns () {
 	nix-search $*
 }
+nix-search () {
+	nix search --inputs-from ~/dotfiles --extra-experimental-features nix-command nixpkgs $*
+}
+using-unfree () {
+	local pkg_names=$(echo $(printf '%s
+' "${@}" | xargs -I'{}' echo "nixpkgs#{}")) 
+	__ETC_ZSHRC_SOURCED= NIXPKGS_ALLOW_UNFREE=1 NIX_PACKAGES="$NIX_PACKAGES $*" nix shell $pkg_names --impure --inputs-from ~/dotfiles --command zsh
+}

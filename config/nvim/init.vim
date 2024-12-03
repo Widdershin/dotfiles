@@ -24,21 +24,30 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'lukas-reineke/lsp-format.nvim'
 
 Plug 'tpope/vim-dadbod'
-Plug 'kristijanhusak/vim-dadbod-ui'
-Plug 'github/copilot.vim'
+"Plug 'kristijanhusak/vim-dadbod-ui'
+" Plug 'github/copilot.vim'
 
-Plug 'pmizio/typescript-tools.nvim'
 Plug 'kchmck/vim-coffee-script'
 
 Plug 'mfussenegger/nvim-dap'
-Plug 'suketa/nvim-dap-ruby'
+" Plug 'suketa/nvim-dap-ruby'
 Plug 'rcarriga/nvim-dap-ui'
 
 Plug 'MunifTanjim/nui.nvim'
-Plug 'OlegGulevskyy/better-ts-errors.nvim'
+Plug 'davidosomething/format-ts-errors.nvim'
 
 Plug 'echasnovski/mini.nvim'
 Plug 'echasnovski/mini.indentscope'
+Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'VonHeikemen/lsp-zero.nvim'
+Plug 'https://git.sr.ht/~whynothugo/lsp_lines.nvim'
+
+Plug 'pmizio/typescript-tools.nvim'
+Plug 'mfussenegger/nvim-lsp-compl'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
 
 call plug#end()
 
@@ -57,7 +66,39 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false,
   },
 }
-require("typescript-tools").setup {}
+
+require("typescript-tools").setup {
+    settings = {
+      complete_function_calls = true,
+    }
+  }
+
+
+local cmp = require'cmp'
+require'cmp'.setup {
+  snippet = {
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body)
+    end,
+  },
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
+  },
+  sources = {
+    { name = 'nvim_lsp' }
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<Tab>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+  }),
+}
+-- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 require("neotest").setup({
   quickfix = {
@@ -108,8 +149,9 @@ local null_ls = require("null-ls")
 
 null_ls.setup({
     sources = {
+        null_ls.builtins.formatting.prettier,
         null_ls.builtins.code_actions.gitsigns,
-        --null_ls.builtins.diagnostics.eslint,
+        null_ls.builtins.diagnostics.eslint,
         null_ls.builtins.diagnostics.rubocop.with({
             command = "bundle",
             args = vim.list_extend(
@@ -128,43 +170,11 @@ null_ls.setup({
     on_attach = require("lsp-format").on_attach
 })
 
-require('trouble').setup({auto_open = false, auto_close = true})
-
---require("better-ts-errors").setup({
---    keymaps = {
---      toggle = '<leader>et', -- Toggling keymap
---      go_to_definition = '<leader>eg' -- Go to problematic type from popup window
---    }
---})
-EOF
-
-lua << EOF
-
---- gets root using best available method
----@return string root
-Foo = {}
-Foo.get_root = function()
-    local root
-
-    -- prefer getting from client
-    local client = require("null-ls.client").get_client()
-    if client then
-        root = client.config.root_dir
-    end
-
-    -- if in named buffer, resolve directly from root_dir
-    if not root then
-        local fname = api.nvim_buf_get_name(0)
-        if fname ~= "" then
-            root = require("null-ls.config").get().root_dir(fname)
-        end
-    end
-
-    -- fall back to cwd
-    root = root or vim.loop.cwd()
-
-    return root
-end
+require('trouble').setup({
+  modes = {
+    diagnostics = { auto_open = true },
+  }
+})
 
 local function ignore_by_buftype(types)
   local buftype = vim.api.nvim_buf_get_option(0, 'buftype')
@@ -183,58 +193,20 @@ golden_size.set_ignore_callbacks({
   { golden_size.ignore_by_window_flag }, -- default one, ignore windows with w:ignore_gold_size=1
 })
 
-require('dap-ruby').setup()
+-- require('dap-ruby').setup()
 require("dapui").setup()
 require('mini.indentscope').setup()
 
--- textDocument/diagnostic support until 0.10.0 is released
---_timers = {}
---local function setup_diagnostics(client, buffer)
---  if require("vim.lsp.diagnostic")._enable then
---    return
---  end
---
---  local diagnostic_handler = function()
---    local params = vim.lsp.util.make_text_document_params(buffer)
---    client.request("textDocument/diagnostic", { textDocument = params }, function(err, result)
---      if err then
---        local err_msg = string.format("diagnostics error - %s", vim.inspect(err))
---        vim.lsp.log.error(err_msg)
---      end
---      local diagnostic_items = {}
---      if result then
---        diagnostic_items = result.items
---      end
---      vim.lsp.diagnostic.on_publish_diagnostics(
---        nil,
---        vim.tbl_extend("keep", params, { diagnostics = diagnostic_items }),
---        { client_id = client.id }
---      )
---    end)
---  end
---
---  diagnostic_handler() -- to request diagnostics on buffer when first attaching
---
---  vim.api.nvim_buf_attach(buffer, false, {
---    on_lines = function()
---      if _timers[buffer] then
---        vim.fn.timer_stop(_timers[buffer])
---      end
---      _timers[buffer] = vim.fn.timer_start(200, diagnostic_handler)
---    end,
---    on_detach = function()
---      if _timers[buffer] then
---        vim.fn.timer_stop(_timers[buffer])
---      end
---    end,
---  })
---end
+local nvim_lsp = require("lspconfig")
+require("lsp-format").setup {}
+nvim_lsp.hls.setup { on_attach = require("lsp-format").on_attach }
+require("lsp_lines").setup({})
 
--- require("lspconfig").ruby_ls.setup({
---   on_attach = function(client, buffer)
---     setup_diagnostics(client, buffer)
---   end,
--- })
+
+vim.diagnostic.config({
+  virtual_text = false,
+})
+
 EOF
 
 set winminwidth=15
@@ -367,15 +339,13 @@ nmap <leader>x :q<CR>
 
 vmap <leader>s :sort<CR>
 
-nmap <CR> :lnext<CR>
-nmap <leader>N :lprev<CR>
-
 nmap <leader>cp :!echo % \| pbcopy<CR>
 
 " FZF
 noremap <c-p> :Telescope find_files<CR>
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 let $FZF_DEFAULT_COMMAND = 'ag --ignore ".git/*" --hidden -l -g ""'
@@ -465,6 +435,8 @@ let g:monster#completion#rcodetools#backend = "async_rct_complete"
 nmap <leader>d :%s/<c-r><c-w>/<c-r><c-w>/g<Left><Left>
 nmap <leader>D :s/<c-r><c-w>/<c-r><c-w>/g<Left><Left>
 vmap <leader>d :s/<c-r><c-w>/<c-r><c-w>/g<Left><Left>
+
+vmap <leader>qc :DB clickhouse://default:default@localhost:9001/default<CR>
 
 " Allow . in visual mode
 vnoremap . :norm.<CR>

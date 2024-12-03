@@ -1,6 +1,5 @@
 { pkgs, ... }:
 {
-  fonts.fontDir.enable = true;
-  fonts.fonts = [ pkgs.hack-font ];
+  fonts.packages = [ pkgs.hack-font ];
 }
 

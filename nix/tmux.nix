@@ -25,13 +25,13 @@ in
 
   programs.tmux.defaultCommand = "zsh";
   programs.tmux.extraConfig = ''
-    set -g default-terminal "screen-256color"
+    set -g default-terminal "xterm-kitty"
 
     set-option -sa terminal-features ',xterm-kitty:RGB'
     set -g focus-events
 
     set-option -sg escape-time 10
-    set -g history-limit 100000
+    set -g history-limit 30000
 
     set -g prefix C-Space
     unbind-key C-b
@@ -40,6 +40,7 @@ in
     set-option -g status-interval 2
     set-option -g automatic-rename on
     set-option -g automatic-rename-format '#{b:pane_current_path} (#{pane_current_command})'
+    set -g status-right '#(TZ="Pacific/Auckland" date +%%H:%%M:%%S)'
 
     # Setup 'v' to begin selection as in Vim
     bind-key -Tcopy-mode-vi 'v' send -X begin-selection

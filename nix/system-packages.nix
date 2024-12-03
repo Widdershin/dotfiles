@@ -37,8 +37,9 @@
 
       # system info
       htop
-      ncdu
       pstree
+      # ncdu
+      # - broken on darwin currently
 
       # networking utils
       socat
@@ -75,5 +76,9 @@
 
       # let's make us a vscode flake
       vscode
+
+      # amp
+      clickhouse
+      teleport_14
     ];
 }

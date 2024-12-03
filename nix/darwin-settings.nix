@@ -1,4 +1,4 @@
-{  system, ... }: {
+{  security, system, ... }: {
   system.defaults.NSGlobalDomain.AppleKeyboardUIMode = 3;
   system.defaults.NSGlobalDomain.ApplePressAndHoldEnabled = false;
   system.defaults.NSGlobalDomain.InitialKeyRepeat = 10;
@@ -17,4 +17,6 @@
 
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToControl = true;
+
+  security.pam.enableSudoTouchIdAuth = true;
 }
