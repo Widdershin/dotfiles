@@ -12,8 +12,8 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=release-24.11";
-    nix-darwin.url = "github:LnL7/nix-darwin/master";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixpkgs-25.05-darwin";
+    nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-25.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
 

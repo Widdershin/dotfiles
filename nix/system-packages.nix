@@ -5,6 +5,7 @@
     with pkgs;
     [ # terminal
       kitty
+      alacritty
       pure-prompt
 
       # neovim and friends
@@ -38,8 +39,7 @@
       # system info
       htop
       pstree
-      # ncdu
-      # - broken on darwin currently
+      ncdu
 
       # networking utils
       socat
@@ -77,8 +77,7 @@
       # let's make us a vscode flake
       vscode
 
-      # amp
+      # work
       clickhouse
-      teleport_15
     ];
 }
