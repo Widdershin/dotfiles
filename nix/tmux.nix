@@ -23,7 +23,6 @@ in
   programs.tmux.enableSensible = true;
   programs.tmux.enableVim = true;
 
-  programs.tmux.defaultCommand = "zsh";
   programs.tmux.extraConfig = ''
     set -g default-terminal "xterm-kitty"
 

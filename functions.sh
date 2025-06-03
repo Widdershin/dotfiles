@@ -36,3 +36,9 @@ using-unfree () {
 ' "${@}" | xargs -I'{}' echo "nixpkgs#{}")) 
 	__ETC_ZSHRC_SOURCED= NIXPKGS_ALLOW_UNFREE=1 NIX_PACKAGES="$NIX_PACKAGES $*" nix shell $pkg_names --impure --inputs-from ~/dotfiles --command zsh
 }
+chfmt () {
+	cat $1 | clickhouse-format --comments | tee $1
+}
+nra () {
+	nix run nixpkgs#$1 --inputs-from ~/dotfiles -- $@:2
+}

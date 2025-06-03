@@ -79,6 +79,6 @@
 
       # amp
       clickhouse
-      teleport_14
+      teleport_15
     ];
 }

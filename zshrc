@@ -186,3 +186,4 @@ stty icrnl
 bindkey "\e[1;3C" emacs-forward-word
 bindkey "\e[1;3D" emacs-backward-word
 export DIRENV_LOG_FORMAT=""
+export NX_DAEMON=false

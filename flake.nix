@@ -12,7 +12,7 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/master";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=release-24.11";
     nix-darwin.url = "github:LnL7/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -47,6 +47,7 @@
         ./nix/darwin-settings.nix
         ./nix/shell-configuration.nix
         ./nix/fonts.nix
+
 
         # packages
         ./nix/system-packages.nix

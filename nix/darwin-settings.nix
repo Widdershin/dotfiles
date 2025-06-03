@@ -19,4 +19,6 @@
   system.keyboard.remapCapsLockToControl = true;
 
   security.pam.enableSudoTouchIdAuth = true;
+
+  system.stateVersion = 4;
 }

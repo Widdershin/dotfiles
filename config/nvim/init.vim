@@ -25,7 +25,7 @@ Plug 'lukas-reineke/lsp-format.nvim'
 
 Plug 'tpope/vim-dadbod'
 "Plug 'kristijanhusak/vim-dadbod-ui'
-" Plug 'github/copilot.vim'
+Plug 'github/copilot.vim'
 
 Plug 'kchmck/vim-coffee-script'
 
@@ -48,6 +48,12 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
+
+" Find and replace
+Plug 'MagicDuck/grug-far.nvim'
+
+Plug 'nvchad/volt'
+Plug 'nvchad/minty'
 
 call plug#end()
 
@@ -122,6 +128,8 @@ require("neotest").setup({
   }
 })
 
+require("grug-far").setup()
+
 require("catppuccin").setup({
     flavour = "mocha",
     highlight_overrides = {
@@ -141,6 +149,14 @@ require("catppuccin").setup({
         -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
     },
 })
+
+require('telescope').setup {
+  pickers = {
+    find_files = {
+      hidden = true
+    }
+  }
+}
 
 require('gitsigns').setup()
 require("lsp-format").setup {}
@@ -201,7 +217,7 @@ local nvim_lsp = require("lspconfig")
 require("lsp-format").setup {}
 nvim_lsp.hls.setup { on_attach = require("lsp-format").on_attach }
 require("lsp_lines").setup({})
-
+nvim_lsp.csharp_ls.setup{}
 
 vim.diagnostic.config({
   virtual_text = false,
@@ -338,10 +354,13 @@ nmap <leader>fef ggVG=
 nmap <leader>x :q<CR>
 
 vmap <leader>s :sort<CR>
+vmap <leader>cf !clickhouse-format --comments -n<CR>
 
 nmap <leader>cp :!echo % \| pbcopy<CR>
 
 " FZF
+nnoremap <leader>fr <cmd>GrugFar<cr>
+
 noremap <c-p> :Telescope find_files<CR>
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
@@ -458,3 +477,4 @@ let g:fzf_preview_floating_window_rate = 1
 
 let g:fzf_layout = { 'down': '~30%' }
 let g:neuron_dir = expand('~/zettelkasten/')
+
