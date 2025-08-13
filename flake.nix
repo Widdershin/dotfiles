@@ -18,28 +18,6 @@
   };
 
   outputs = inputs@{ self, nix-darwin, nixpkgs }: {
-    darwinConfigurations."Nicks-MacBook-Pro" = nix-darwin.lib.darwinSystem {
-      modules = [
-        # core system config
-        ./nix/nix-settings.nix
-        ./nix/darwin-settings.nix
-        ./nix/shell-configuration.nix
-        ./nix/fonts.nix
-        ./nix/linux-builder.nix
-
-        # packages
-        ./nix/system-packages.nix
-        ./nix/homebrew.nix
-        ./nix/neovim.nix
-
-        # services
-        ./nix/tmux.nix
-        ./nix/tailscale.nix
-      ];
-
-      specialArgs = { inherit inputs; };
-    };
-
     darwinConfigurations."Nicks-MacBook-Air" = nix-darwin.lib.darwinSystem {
       modules = [
         # core system config
