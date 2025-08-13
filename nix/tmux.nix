@@ -24,9 +24,9 @@ in
   programs.tmux.enableVim = true;
 
   programs.tmux.extraConfig = ''
-    set -g default-terminal "xterm-kitty"
+    set -g default-terminal "$TERM"
+    set -ag terminal-overrides ",$TERM:Tc"
 
-    set-option -sa terminal-features ',xterm-kitty:RGB'
     set -g focus-events
 
     set-option -sg escape-time 10

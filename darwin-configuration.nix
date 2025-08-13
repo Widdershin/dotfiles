@@ -70,7 +70,7 @@ in
   system.keyboard.remapCapsLockToControl = true;
 
   fonts.enableFontDir = true;
-  fonts.fonts = [ pkgs.hack-font ];
+  fonts.fonts = [ pkgs.nerd-fonts.hack ];
 
   homebrew.enable = true;
   homebrew.brewPrefix = "/opt/homebrew/bin";

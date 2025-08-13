@@ -70,6 +70,7 @@
 
       # common dev libs
       libjpeg
+      coreutils
 
       # virtualization
       utm
@@ -79,5 +80,8 @@
 
       # work
       clickhouse
+
+      # graph rendering
+      graphviz
     ];
 }

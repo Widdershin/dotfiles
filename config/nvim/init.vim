@@ -17,6 +17,7 @@ Plug 'tpope/vim-dotenv'
 Plug 'tpope/vim-rails'
 Plug 'folke/trouble.nvim'
 Plug 'nvimtools/none-ls.nvim'
+Plug 'nvimtools/none-ls-extras.nvim'
 Plug 'dm1try/golden_size'
 Plug 'xiyaowong/virtcolumn.nvim'
 
@@ -38,7 +39,7 @@ Plug 'davidosomething/format-ts-errors.nvim'
 
 Plug 'echasnovski/mini.nvim'
 Plug 'echasnovski/mini.indentscope'
-Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'nvimtools/none-ls.nvim'
 Plug 'VonHeikemen/lsp-zero.nvim'
 Plug 'https://git.sr.ht/~whynothugo/lsp_lines.nvim'
 
@@ -62,6 +63,8 @@ call plug#end()
 " sigh......... this caused so many problems
 
 lua << EOF
+vim.o.termguicolors = true
+
 require'nvim-treesitter.configs'.setup {
   highlight = {
     enable = true,
@@ -99,7 +102,7 @@ require'cmp'.setup {
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
-    ['<Tab>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    ['<C-CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
   }),
 }
@@ -167,7 +170,7 @@ null_ls.setup({
     sources = {
         null_ls.builtins.formatting.prettier,
         null_ls.builtins.code_actions.gitsigns,
-        null_ls.builtins.diagnostics.eslint,
+        require("none-ls.diagnostics.eslint"),
         null_ls.builtins.diagnostics.rubocop.with({
             command = "bundle",
             args = vim.list_extend(
@@ -191,6 +194,8 @@ require('trouble').setup({
     diagnostics = { auto_open = true },
   }
 })
+
+vim.diagnostic.config({ virtual_lines = true })
 
 local function ignore_by_buftype(types)
   local buftype = vim.api.nvim_buf_get_option(0, 'buftype')
