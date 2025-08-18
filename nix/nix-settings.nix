@@ -16,7 +16,7 @@
     use-sqlite-wal = true
   '';
 
-  nix.settings.trusted-users = ["nick" "root"];
+  nix.settings.trusted-users = ["nickj" "root"];
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
   programs.nix-index.enable = true;
