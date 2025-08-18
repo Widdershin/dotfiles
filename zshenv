@@ -17,4 +17,4 @@ function rule () {
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='ag -l -g ""'
-if [ -e /Users/nick/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/nick/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+if [ -e /Users/nickj/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/nickj/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

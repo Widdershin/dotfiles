@@ -3,6 +3,7 @@
 
   # Auto upgrade nix package and the daemon service.
   nix.package = pkgs.nixVersions.latest;
+  ids.gids.nixbld = 350;
 
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowAliases = true;

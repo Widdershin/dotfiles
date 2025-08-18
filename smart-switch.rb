@@ -2,7 +2,7 @@
 
 require 'set'
 
-PROJECTS_DIR = '/Users/nick/Projects/'
+PROJECTS_DIR = '/Users/nickj/Projects/'
 
 # catppuccino fzf theme
 ENV["FZF_DEFAULT_OPTS"] = <<~FZF_OPTS
@@ -32,7 +32,7 @@ def start_session(project)
   project_path = File.join(PROJECTS_DIR, project)
 
   if project === "dotfiles"
-    project_path = "/Users/nick/dotfiles"
+    project_path = "/Users/nickj/dotfiles"
   end
 
   if tmux_is_running?

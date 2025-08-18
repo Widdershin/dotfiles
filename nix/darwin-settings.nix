@@ -1,5 +1,5 @@
 {  security, system, ... }: {
-  system.primaryUser = "nick";
+  system.primaryUser = "nickj";
   system.defaults.NSGlobalDomain.AppleKeyboardUIMode = 3;
   system.defaults.NSGlobalDomain.ApplePressAndHoldEnabled = false;
   system.defaults.NSGlobalDomain.InitialKeyRepeat = 10;
