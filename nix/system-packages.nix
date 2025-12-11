@@ -54,6 +54,8 @@
       # devops
       aws-vault
       awscli2
+      terraform
+      ssm-session-manager-plugin
       heroku
       terraform
 
@@ -83,5 +85,6 @@
 
       # graph rendering
       graphviz
+      coreutils
     ];
 }
